@@ -1,0 +1,40 @@
+{
+	"root": true,
+	"extends": [
+		"plugin:react/recommended",
+		"plugin:@typescript-eslint/recommended",
+		"prettier/@typescript-eslint",
+		"plugin:prettier/recommended",
+		"plugin:react-hooks/recommended"
+	],
+	"parserOptions": {
+		"sourceType": "module",
+		"ecmaVersion": 6
+	},
+	"env": {
+		"es6": true
+	},
+	"settings": {
+		"react": {
+			"version": "detect"
+		}
+	},
+	"rules": {
+		"@typescript-eslint/no-empty-function": 0,
+		"@typescript-eslint/ban-ts-comment": 0,
+		"react/prop-types": 0,
+		"react/jsx-key": 0,
+		"react/display-name": 0,
+		"@typescript-eslint/no-explicit-any": 0,
+		"@typescript-eslint/explicit-module-boundary-types": 0,
+		"@typescript-eslint/no-unused-vars": [1, { "ignoreRestSiblings": true }],
+		"@typescript-eslint/ban-types": [
+			0,
+			["object"]
+		],
+		"prettier/prettier": ["error", {
+    		"endOfLine":"auto"
+  		}],
+		"react-hooks/exhaustive-deps": "warn"
+	}
+}
