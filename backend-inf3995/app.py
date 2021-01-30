@@ -5,6 +5,7 @@ app = Flask(__name__)
 CORS(app)
 
 activated = False
+battery = 100
 
 @app.route("/changeState")
 def changeState():
@@ -17,3 +18,9 @@ def changeState():
 def getState():
     global activated
     return {'result': activated}
+
+@app.route("/getBatteryLevel")
+def getBatteryLevel():
+    global battery
+    battery -= 1
+    return {'result': battery}
