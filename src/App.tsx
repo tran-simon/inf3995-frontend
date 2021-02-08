@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import Switch from '@material-ui/core/Switch';
-import { TextField } from '@material-ui/core';
 import firebase from 'firebase';
 
 function App() {
@@ -44,7 +43,7 @@ function App() {
         .then((data) => {
           setBatteryLevel(data.result);
         });
-    }, 5000);
+    }, 1000);
     return () => clearInterval(getBattery);
   }, [url]);
 
@@ -63,14 +62,6 @@ function App() {
       <header className="App-header">
         <h1>Crazyflie Control Center</h1>
         <p>DEL</p>
-        <TextField
-          label="Backend URL"
-          // @ts-ignore
-          onChange={({ target }) => {
-            setUrl(target.value);
-          }}
-          value={url}
-        />
         <Switch
           checked={delState}
           onChange={button}
