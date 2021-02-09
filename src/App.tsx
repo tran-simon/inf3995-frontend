@@ -1,12 +1,11 @@
 // @ts-ignore
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import Switch from '@material-ui/core/Switch';
 import firebase from 'firebase';
 
 function App() {
-  const [delState, setDelState] = useState(false);
   const [batteryLevel, setBatteryLevel] = useState(0);
+  const [droneNumber, setDroneNumber] = useState(0);
   const [url, setUrl] = useState('http://127.0.0.1:5000');
 
   const firebaseConfig = {
@@ -31,45 +30,34 @@ function App() {
   });
 
   useEffect(() => {
-    fetch(`${url}/getState`)
-      .then((res) => res.json())
-      .then((data) => {
-        setDelState(data.result);
-      });
-
-    const getBattery = setInterval(() => {
-      fetch(`${url}/getBatteryLevel`)
-        .then((res) => res.json())
-        .then((data) => {
-          setBatteryLevel(data.result);
-        });
+    const getStats = setInterval(() => {
+      fetch(`${url}/getStats`);
+      getBattery();
+      getDroneNumber();
     }, 1000);
-    return () => clearInterval(getBattery);
-  }, [url]);
+    return () => clearInterval(getStats);
+  });
 
-  const button = () => {
-    fetch(`${url}/changeState`);
+  const getBattery = () => {
+    database
+      .ref('battery0/')
+      .get()
+      .then((dataSnap) => setBatteryLevel(+dataSnap.val()));
+  };
 
-    fetch(`${url}/getState`)
-      .then((res) => res.json())
-      .then((data) => {
-        setDelState(data.result);
-      });
+  const getDroneNumber = () => {
+    database
+      .ref('number/')
+      .get()
+      .then((dataSnap) => setDroneNumber(+dataSnap.val()));
   };
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Crazyflie Control Center</h1>
-        <p>DEL</p>
-        <Switch
-          checked={delState}
-          onChange={button}
-          color="secondary"
-          name="delState"
-          inputProps={{ 'aria-label': 'primary checkbox' }}
-        />
         <p>Battery Level : {batteryLevel} %</p>
+        <p>Number of drones: {droneNumber}</p>
       </header>
     </div>
   );
