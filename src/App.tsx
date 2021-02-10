@@ -52,12 +52,17 @@ function App() {
       .then((dataSnap) => setDroneNumber(+dataSnap.val()));
   };
 
+  const startSimulation = () => {
+    fetch(`${url}/startSim`);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         <h1>Crazyflie Control Center</h1>
         <p>Battery Level : {batteryLevel} %</p>
         <p>Number of drones: {droneNumber}</p>
+        <button onClick={() => startSimulation()}>Start simulation</button>
       </header>
     </div>
   );
