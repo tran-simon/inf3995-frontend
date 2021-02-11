@@ -7,9 +7,7 @@ COPY yarn.lock ./
 
 RUN yarn install
 
-COPY tsconfig.json ./
-COPY src/ ./src/
-COPY public/ ./public/
+COPY . ./
 
 ENV PORT=3000
 
