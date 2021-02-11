@@ -1,13 +1,13 @@
-// @ts-ignore
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import Switch from '@material-ui/core/Switch';
 import firebase from 'firebase';
+import { Button } from '@material-ui/core';
 
 function App() {
   const [delState, setDelState] = useState(false);
   const [batteryLevel, setBatteryLevel] = useState(0);
-  const [url, setUrl] = useState('http://127.0.0.1:5000');
+  const [robotState, setRobotState] = useState<string>('No Crazyflies found');
 
   const firebaseConfig = {
     apiKey: 'AIzaSyAp9j7bZz1OXvO8ZJElH36pKarkLQdOg-o',
@@ -21,40 +21,36 @@ function App() {
   if (firebase.apps.length === 0) {
     firebase.initializeApp(firebaseConfig);
   }
-  const database = firebase.database();
 
   useEffect(() => {
-    database
-      .ref('url/')
-      .get()
-      .then((dataSnap) => setUrl(dataSnap.val()));
-  });
-
-  useEffect(() => {
-    fetch(`${url}/getState`)
-      .then((res) => res.json())
-      .then((data) => {
-        setDelState(data.result);
-      });
+    fetch(`/getState`).then((res) => {
+      if (res.ok) {
+        return res.json().then((data) => setDelState(!!data.result));
+      }
+    });
 
     const getBattery = setInterval(() => {
-      fetch(`${url}/getBatteryLevel`)
-        .then((res) => res.json())
-        .then((data) => {
-          setBatteryLevel(data.result);
-        });
+      fetch(`/getBatteryLevel`).then((res) => {
+        if (res.ok) {
+          return res.json().then((data) => {
+            setBatteryLevel(data.result);
+          });
+        }
+      });
     }, 1000);
     return () => clearInterval(getBattery);
-  }, [url]);
+  });
 
   const button = () => {
-    fetch(`${url}/changeState`);
-
-    fetch(`${url}/getState`)
-      .then((res) => res.json())
-      .then((data) => {
-        setDelState(data.result);
+    fetch(`/changeState`).then(() => {
+      fetch(`/getState`).then((res) => {
+        if (res.ok) {
+          return res.json().then((data) => {
+            setDelState(!!data.result);
+          });
+        }
       });
+    });
   };
 
   return (
@@ -70,6 +66,20 @@ function App() {
           inputProps={{ 'aria-label': 'primary checkbox' }}
         />
         <p>Battery Level : {batteryLevel} %</p>
+        {robotState}
+        <Button
+          onClick={() => {
+            fetch(`/scan`)
+              .then((response) => {
+                return response.text();
+              })
+              .then((data) => {
+                setRobotState(data);
+              });
+          }}
+        >
+          Scan
+        </Button>
       </header>
     </div>
   );

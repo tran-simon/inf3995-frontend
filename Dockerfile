@@ -1,6 +1,6 @@
 FROM node
 
-WORKDIR /app
+WORKDIR /root/frontend
 
 COPY package.json ./
 COPY yarn.lock ./
