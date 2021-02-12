@@ -68,6 +68,6 @@
     "prettier": "^2.2.1",
     "yarn": "^1.22.10"
   },
-  "proxy": "http://0.0.0.0:5000/"
+  "proxy": "http://backend:5000/"
 
 }
