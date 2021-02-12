@@ -2,11 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import firebase from 'firebase';
+import { Button } from '@material-ui/core';
 
 function App() {
   const [batteryLevel, setBatteryLevel] = useState(0);
   const [droneNumber, setDroneNumber] = useState(0);
-  const [url, setUrl] = useState('http://127.0.0.1:5000');
+  const [droneFound, setDroneFound] = useState<string>('NO Crazyflies found');
 
   const firebaseConfig = {
     apiKey: 'AIzaSyAp9j7bZz1OXvO8ZJElH36pKarkLQdOg-o',
@@ -23,17 +24,13 @@ function App() {
   const database = firebase.database();
 
   useEffect(() => {
-    database
-      .ref('url/')
-      .get()
-      .then((dataSnap) => setUrl(dataSnap.val()));
-  });
-
-  useEffect(() => {
     const getStats = setInterval(() => {
-      fetch(`${url}/getStats`);
-      getBattery();
-      getDroneNumber();
+      fetch(`/getStats`).then((res) => {
+        if (res.ok) {
+          getBattery();
+          getDroneNumber();
+        }
+      });
     }, 1000);
     return () => clearInterval(getStats);
   });
@@ -53,7 +50,11 @@ function App() {
   };
 
   const startSimulation = () => {
-    fetch(`${url}/startSim`);
+    fetch(`/startSim`);
+  };
+
+  const takeOff = () => {
+    fetch(`/takeOff`);
   };
 
   return (
@@ -62,7 +63,22 @@ function App() {
         <h1>Crazyflie Control Center</h1>
         <p>Battery Level : {batteryLevel} %</p>
         <p>Number of drones: {droneNumber}</p>
-        <button onClick={() => startSimulation()}>Start simulation</button>
+        <Button onClick={() => startSimulation()}>Start simulation</Button>
+        <Button onClick={() => takeOff()}>Take Off</Button>
+        {droneFound}
+        <Button
+          onClick={() => {
+            fetch(`/scan`)
+              .then((response) => {
+                return response.text();
+              })
+              .then((data) => {
+                setDroneFound(data);
+              });
+          }}
+        >
+          Scan for Crazyflies
+        </Button>
       </header>
     </div>
   );
