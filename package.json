@@ -68,5 +68,5 @@
     "prettier": "^2.2.1",
     "yarn": "^1.22.10"
   },
-	"proxy": "http://backend:5000/"
+	"proxy": "http://inf3995-backend:5000/"
 }
