@@ -7,7 +7,6 @@ import { Button } from '@material-ui/core';
 function App() {
   const [batteryLevel, setBatteryLevel] = useState(0);
   const [droneNumber, setDroneNumber] = useState(0);
-  const [droneFound, setDroneFound] = useState<string>('NO Crazyflies found');
 
   const firebaseConfig = {
     apiKey: 'AIzaSyAp9j7bZz1OXvO8ZJElH36pKarkLQdOg-o',
@@ -53,6 +52,10 @@ function App() {
     fetch(`/startSim`);
   };
 
+  const land = () => {
+    fetch(`/land`);
+  };
+
   const takeOff = () => {
     fetch(`/takeOff`);
   };
@@ -65,16 +68,10 @@ function App() {
         <p>Number of drones: {droneNumber}</p>
         <Button onClick={() => startSimulation()}>Start simulation</Button>
         <Button onClick={() => takeOff()}>Take Off</Button>
-        {droneFound}
+        <Button onClick={() => land()}>Land</Button>
         <Button
           onClick={() => {
-            fetch(`/scan`)
-              .then((response) => {
-                return response.text();
-              })
-              .then((data) => {
-                setDroneFound(data);
-              });
+            fetch(`/scan`);
           }}
         >
           Scan for Crazyflies
