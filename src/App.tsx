@@ -3,17 +3,19 @@ import './App.css';
 import firebase from 'firebase';
 import { Button } from '@material-ui/core';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 function App() {
-  const [batteryLevel, setBatteryLevel] = useState(0);
+  const [batteryLevel, setBatteryLevel] = useState();
   const [droneNumber, setDroneNumber] = useState(0);
 
   const firebaseConfig = {
-    apiKey: 'AIzaSyAp9j7bZz1OXvO8ZJElH36pKarkLQdOg-o',
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
     authDomain: 'inf3995-100.firebase.com',
     databaseURL: 'https://inf3995-100-default-rtdb.firebaseio.com/',
     projectId: 'inf3995-100',
     storageBucket: 'inf3995-100.appspot.com',
-    appId: '1:749259130279:web:69ae347d4cdfa89418e282',
+    appId: process.env.REACT_APP_FIREBASE_APP_ID,
   };
 
   if (firebase.apps.length === 0) {
@@ -22,40 +24,30 @@ function App() {
 
   useEffect(() => {
     const getStats = setInterval(() => {
-      fetch(`/getStats`).then((res) => {
+      fetch(`${BACKEND_URL}/getStats`).then((res) => {
         if (res.ok) {
-          getBattery();
-          getDroneNumber();
+          res.json().then((data) => {
+            debugger;
+            const keys = Object.keys(data);
+            setBatteryLevel(keys.length > 0 ? data[keys[0]] : undefined);
+            setDroneNumber(keys.length);
+          });
         }
       });
     }, 1000);
     return () => clearInterval(getStats);
   });
 
-  const getBattery = () => {
-    database
-      .ref('battery0/')
-      .get()
-      .then((dataSnap) => setBatteryLevel(+dataSnap.val()));
-  };
-
-  const getDroneNumber = () => {
-    database
-      .ref('number/')
-      .get()
-      .then((dataSnap) => setDroneNumber(+dataSnap.val()));
-  };
-
   const startSimulation = () => {
-    fetch(`/startSim`);
+    fetch(`${BACKEND_URL}/startSim`);
   };
 
   const land = () => {
-    fetch(`/land`);
+    fetch(`${BACKEND_URL}/land`);
   };
 
   const takeOff = () => {
-    fetch(`/takeOff`);
+    fetch(`${BACKEND_URL}/takeOff`);
   };
 
   return (
@@ -69,14 +61,14 @@ function App() {
         <Button onClick={() => land()}>Land</Button>
         <Button
           onClick={() => {
-            fetch(`/scan`);
+            fetch(`${BACKEND_URL}/scan`);
           }}
         >
           Scan for Crazyflies
         </Button>
         <Button
           onClick={() => {
-            fetch('/ConnectSocket').then((response) => {
+            fetch(`${BACKEND_URL}/ConnectSocket`).then((response) => {
               return response.text();
             });
           }}
