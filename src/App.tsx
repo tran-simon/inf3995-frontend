@@ -1,4 +1,3 @@
-// @ts-ignore
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import firebase from 'firebase';
@@ -20,7 +19,6 @@ function App() {
   if (firebase.apps.length === 0) {
     firebase.initializeApp(firebaseConfig);
   }
-  const database = firebase.database();
 
   useEffect(() => {
     const getStats = setInterval(() => {

@@ -1,15 +1,13 @@
 FROM node
 
-WORKDIR /app
+WORKDIR /root/frontend
 
 COPY package.json ./
 COPY yarn.lock ./
 
 RUN yarn install
 
-COPY tsconfig.json ./
-COPY src/ ./src/
-COPY public/ ./public/
+COPY . ./
 
 ENV PORT=3000
 
