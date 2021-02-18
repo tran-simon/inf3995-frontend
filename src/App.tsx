@@ -76,6 +76,15 @@ function App() {
         >
           Scan for Crazyflies
         </Button>
+        <Button
+          onClick={() => {
+            fetch('/ConnectSocket').then((response) => {
+              return response.text();
+            });
+          }}
+        >
+          Start Simulation
+        </Button>
       </header>
     </div>
   );
