@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import Switch from '@material-ui/core/Switch';
 import firebase from 'firebase';
 import { Button } from '@material-ui/core';
 
 function App() {
-  const [delState, setDelState] = useState(false);
   const [batteryLevel, setBatteryLevel] = useState(0);
-  const [robotState, setRobotState] = useState<string>('No Crazyflies found');
+  const [droneNumber, setDroneNumber] = useState(0);
 
   const firebaseConfig = {
     apiKey: 'AIzaSyAp9j7bZz1OXvO8ZJElH36pKarkLQdOg-o',
@@ -23,62 +21,67 @@ function App() {
   }
 
   useEffect(() => {
-    fetch(`/getState`).then((res) => {
-      if (res.ok) {
-        return res.json().then((data) => setDelState(!!data.result));
-      }
-    });
-
-    const getBattery = setInterval(() => {
-      fetch(`/getBatteryLevel`).then((res) => {
+    const getStats = setInterval(() => {
+      fetch(`/getStats`).then((res) => {
         if (res.ok) {
-          return res.json().then((data) => {
-            setBatteryLevel(data.result);
-          });
+          getBattery();
+          getDroneNumber();
         }
       });
     }, 1000);
-    return () => clearInterval(getBattery);
+    return () => clearInterval(getStats);
   });
 
-  const button = () => {
-    fetch(`/changeState`).then(() => {
-      fetch(`/getState`).then((res) => {
-        if (res.ok) {
-          return res.json().then((data) => {
-            setDelState(!!data.result);
-          });
-        }
-      });
-    });
+  const getBattery = () => {
+    database
+      .ref('battery0/')
+      .get()
+      .then((dataSnap) => setBatteryLevel(+dataSnap.val()));
+  };
+
+  const getDroneNumber = () => {
+    database
+      .ref('number/')
+      .get()
+      .then((dataSnap) => setDroneNumber(+dataSnap.val()));
+  };
+
+  const startSimulation = () => {
+    fetch(`/startSim`);
+  };
+
+  const land = () => {
+    fetch(`/land`);
+  };
+
+  const takeOff = () => {
+    fetch(`/takeOff`);
   };
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Crazyflie Control Center</h1>
-        <p>DEL</p>
-        <Switch
-          checked={delState}
-          onChange={button}
-          color="secondary"
-          name="delState"
-          inputProps={{ 'aria-label': 'primary checkbox' }}
-        />
         <p>Battery Level : {batteryLevel} %</p>
-        {robotState}
+        <p>Number of drones: {droneNumber}</p>
+        <Button onClick={() => startSimulation()}>Start simulation</Button>
+        <Button onClick={() => takeOff()}>Take Off</Button>
+        <Button onClick={() => land()}>Land</Button>
         <Button
           onClick={() => {
-            fetch(`/scan`)
-              .then((response) => {
-                return response.text();
-              })
-              .then((data) => {
-                setRobotState(data);
-              });
+            fetch(`/scan`);
           }}
         >
-          Scan
+          Scan for Crazyflies
+        </Button>
+        <Button
+          onClick={() => {
+            fetch('/ConnectSocket').then((response) => {
+              return response.text();
+            });
+          }}
+        >
+          Start Simulation
         </Button>
       </header>
     </div>
