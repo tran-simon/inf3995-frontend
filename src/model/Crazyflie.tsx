@@ -1,1 +1,5 @@
-export default interface Crazyflie {}
+export default interface Crazyflie {
+  droneId?: string;
+  battery?: number;
+  speed?: number;
+}

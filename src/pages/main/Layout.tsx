@@ -8,6 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import CFDrawer from '../../components/CFDrawer';
+import ControlDrawer from '../../components/ControlDrawer/ControlDrawer';
 
 const drawerWidth = 240;
 
@@ -23,6 +24,11 @@ const useStyles = makeStyles((theme) => {
     drawer: {
       width: drawerWidth,
     },
+    content: {
+      overflow: 'auto',
+      padding: '1rem',
+      flexGrow: 1,
+    },
   });
 });
 
@@ -30,7 +36,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const classes = useStyles();
 
   return (
-    <Box display="flex">
+    <Box display="flex" height="100vh">
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Typography>Crazyflie Control Center</Typography>
@@ -43,15 +49,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
       >
         <Toolbar />
       </CFDrawer>
-      <main
-        style={{
-          flexGrow: 1,
-          padding: '1rem',
-        }}
-      >
+      <Box display="flex" flexDirection="column" flexGrow="1" overflow="hidden">
         <Toolbar />
-        {children}
-      </main>
+        <main className={classes.content}>{children}</main>
+        <ControlDrawer />
+      </Box>
     </Box>
   );
 };
