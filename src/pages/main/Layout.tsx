@@ -1,14 +1,19 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import {
   AppBar,
   Box,
   createStyles,
+  Divider,
+  IconButton,
   makeStyles,
   Toolbar,
   Typography,
 } from '@material-ui/core';
 import CFDrawer from '../../components/CFDrawer';
 import ControlDrawer from '../../components/ControlDrawer/ControlDrawer';
+import clsx from 'clsx';
+
+import MenuIcon from '@material-ui/icons/Menu';
 
 const drawerWidth = 240;
 
@@ -24,6 +29,32 @@ const useStyles = makeStyles((theme) => {
     drawer: {
       width: drawerWidth,
     },
+    drawerOpen: {
+      width: drawerWidth,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    drawerClose: {
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      overflowX: 'hidden',
+      width: theme.spacing(7) + 1,
+      [theme.breakpoints.up('sm')]: {
+        width: theme.spacing(9) + 1,
+      },
+    },
+    drawerToolbar: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
+    drawerToolbarBtn: {
+      marginRight: 36,
+    },
+
     content: {
       overflow: 'auto',
       padding: '1rem',
@@ -33,23 +64,46 @@ const useStyles = makeStyles((theme) => {
 });
 
 const Layout = ({ children }: { children: ReactNode }) => {
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
 
   return (
     <Box display="flex" height="100vh">
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
+          <IconButton
+            onClick={() => {
+              setOpen(!open);
+            }}
+            edge="start"
+            className={classes.drawerToolbarBtn}
+          >
+            <MenuIcon />
+          </IconButton>
           <Typography>Crazyflie Control Center</Typography>
         </Toolbar>
       </AppBar>
       <CFDrawer
-        className={classes.drawer}
-        style={{ width: drawerWidth }}
-        classes={{ paper: classes.drawer }}
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: open,
+          [classes.drawerClose]: !open,
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          }),
+        }}
       >
         <Toolbar />
+        <Divider />
       </CFDrawer>
-      <Box display="flex" flexDirection="column" flexGrow="1" overflow="hidden">
+      <Box
+        display=" flex"
+        flexDirection=" column"
+        flexGrow="1"
+        overflow="hidden"
+      >
         <Toolbar />
         <main className={classes.content}>{children}</main>
         <ControlDrawer />
