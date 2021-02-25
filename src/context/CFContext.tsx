@@ -9,7 +9,8 @@ import Crazyflie from '../model/Crazyflie';
 import { noop } from 'lodash';
 import { SetState } from '../utils/utils';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL =
+  process.env.REACT_APP_BACKEND_URL ?? 'http://localhost:5000';
 
 interface ICFContext {
   cfList: Crazyflie[];
@@ -53,9 +54,11 @@ export const CFProvider = ({
   const [refreshRate, setRefreshRate] = useState<number>(
     props.refreshRate ?? 0,
   );
-  const [backendUrl, setBackendUrl] = useState(props.backendUrl ?? BACKEND_URL);
+  const [backendUrl, setBackendUrl] = useState<string | undefined>(
+    props.backendUrl ?? BACKEND_URL,
+  );
   const [backendDisconnected, setBackendDisconnected] = useState(
-    props.backendDisconnected ?? false,
+    props.backendDisconnected ?? !!backendUrl,
   );
   const [cfList, setCfList] = useState<Crazyflie[]>(props.cfList || []);
 
@@ -101,8 +104,6 @@ export const CFProvider = ({
   useEffect(() => {
     if (!backendDisconnected && !!refreshRate) {
       const refresh = setInterval(() => {
-        //todo
-        console.log(refreshRate);
         updateStats();
       }, refreshRate);
       return () => clearInterval(refresh);
