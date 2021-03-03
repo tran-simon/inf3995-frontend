@@ -8,6 +8,7 @@ import React, {
 import Crazyflie from '../model/Crazyflie';
 import { noop } from 'lodash';
 import { SetState } from '../utils/utils';
+import { BackendREST } from '../backendApi/BackendREST';
 
 const BACKEND_URL =
   process.env.REACT_APP_BACKEND_URL ?? 'http://localhost:5000';
@@ -36,7 +37,6 @@ const DefaultCfContext: ICFContext = {
   updateStats: async () => {},
   backendUrl: BACKEND_URL,
   setBackendUrl: noop,
-
   setRefreshRate: noop,
 
   land: async () => {},
@@ -64,13 +64,9 @@ export const CFProvider = ({
 
   const scan = useCallback(async () => {
     if (!backendDisconnected) {
-      return fetch(`${backendUrl}/scan`).then((res) => {
-        if (res.ok) {
-          res.json().then((value) => {
-            if (Array.isArray(value)) {
-              setCfList(value);
-            }
-          });
+      return BackendREST.scan(backendUrl).then((value) => {
+        if (Array.isArray(value)) {
+          setCfList(value);
         }
       });
     }
@@ -78,20 +74,16 @@ export const CFProvider = ({
 
   const updateStats = useCallback(async () => {
     if (!backendDisconnected) {
-      return fetch(`${backendUrl}/updateStats`).then((res) => {
-        if (res.ok) {
-          return res.json().then((val) => {
-            if (Array.isArray(val)) {
-              setCfList(val);
-            }
-          });
+      return BackendREST.updateStats(backendUrl).then((val) => {
+        if (Array.isArray(val)) {
+          setCfList(val);
         }
       });
     }
   }, [backendUrl, backendDisconnected]);
 
   useEffect(() => {
-    fetch(`${backendUrl}/liveCheck`)
+    BackendREST.liveCheck(backendUrl)
       .then((response) => {
         setBackendDisconnected(!response.ok);
       })
@@ -99,7 +91,7 @@ export const CFProvider = ({
       .catch(() => {
         setBackendDisconnected(true);
       });
-  }, [backendUrl, updateStats]);
+  }, [backendUrl, updateStats, setBackendDisconnected]);
 
   useEffect(() => {
     if (!backendDisconnected && !!refreshRate) {
@@ -112,12 +104,12 @@ export const CFProvider = ({
 
   const takeoff = async () => {
     if (!backendDisconnected) {
-      return fetch(`${backendUrl}/takeOff`);
+      return BackendREST.takeoff(backendUrl);
     }
   };
   const land = async () => {
     if (!backendDisconnected) {
-      return fetch(`${backendUrl}/land`);
+      return BackendREST.land(backendUrl);
     }
   };
 
