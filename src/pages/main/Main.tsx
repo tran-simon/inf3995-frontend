@@ -1,5 +1,5 @@
-import React from 'react';
-import { CFProvider } from '../../context/CFContext';
+import React, { useContext } from 'react';
+import CFContext, { CFProvider } from '../../context/CFContext';
 import Layout from './Layout';
 import { Button, Grid } from '@material-ui/core';
 
@@ -10,7 +10,17 @@ function Main() {
         <Layout>
           <Grid container spacing={2}>
             <Grid item>
-              <Button>Start Simulation</Button>
+              <CFContext.Consumer>
+                {({ connect }) => (
+                  <Button
+                    onClick={() => {
+                      connect();
+                    }}
+                  >
+                    Start Simulation
+                  </Button>
+                )}
+              </CFContext.Consumer>
             </Grid>
           </Grid>
         </Layout>
