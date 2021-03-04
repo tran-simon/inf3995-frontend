@@ -1,5 +1,6 @@
-import React, { SVGProps } from 'react';
+import React, { SVGProps, useContext } from 'react';
 import { Point } from '../../utils/utils';
+import CFContext from '../../context/CFContext';
 
 type MapViewportProps = Partial<SVGProps<SVGSVGElement>> & {
   size?: number;
@@ -8,6 +9,7 @@ type MapViewportProps = Partial<SVGProps<SVGSVGElement>> & {
 
 const MapViewport = React.forwardRef<SVGSVGElement, MapViewportProps>(
   ({ size = 100, center = { x: 0, y: 0 }, ...props }, ref) => {
+    const { cfList, walls } = useContext(CFContext);
     return (
       <svg
         width="100%"
@@ -15,7 +17,28 @@ const MapViewport = React.forwardRef<SVGSVGElement, MapViewportProps>(
         viewBox={`${center.x} ${center.y} ${size} ${size}`}
         {...props}
         ref={ref}
-      ></svg>
+      >
+        {cfList.map((cf, i) => {
+          return (
+            <circle
+              key={i}
+              r="1"
+              cx={cf.position?.x}
+              cy={cf.position?.y}
+              fill="blue"
+            >
+              <title>{cf.droneId}</title>
+            </circle>
+          );
+        })}
+        {walls.map((wall, i) => {
+          return (
+            <rect key={i} width="1" height="1" {...wall.position} fill="red">
+              <title>Wall found by drone: {wall.crazyflie.droneId}</title>
+            </rect>
+          );
+        })}
+      </svg>
     );
   },
 );

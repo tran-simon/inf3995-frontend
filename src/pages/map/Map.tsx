@@ -6,6 +6,11 @@ import { useMouseHandler } from '../../hooks';
 import { DEFAULT_ZOOM } from '../../utils/constants';
 import { Point } from '../../utils/utils';
 
+/**
+ *
+ * based on https://css-tricks.com/creating-a-panning-effect-for-svg/
+ *
+ */
 const Map = () => {
   const mapRef = useRef<SVGSVGElement | null>(null);
 
