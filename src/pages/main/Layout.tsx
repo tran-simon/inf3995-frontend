@@ -80,7 +80,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography>Crazyflie Control Center</Typography>
+          <Typography>Centre de contrôle des Crazyflies</Typography>
         </Toolbar>
       </AppBar>
       <CFDrawer

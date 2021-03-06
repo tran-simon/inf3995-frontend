@@ -12,7 +12,6 @@ const ControlDrawer = (props: GridProps) => {
   const theme = useTheme();
   const { cfList, takeoff, land, connect } = useContext(CFContext);
 
-  //todo: only takeof selected cfs
   return (
     <Grid
       container
@@ -26,16 +25,14 @@ const ControlDrawer = (props: GridProps) => {
       {...props}
     >
       <Grid item xs={12}>
-        <Typography variant="h2">
-          {cfList.map((cf) => cf.droneId)}&nbsp;
-        </Typography>
+        <Typography variant="h2">Nombre de drones: {cfList.length}</Typography>
       </Grid>
 
       <Grid item>
-        <Button onClick={takeoff}>Takeoff</Button>
+        <Button onClick={takeoff}>Décoller</Button>
       </Grid>
       <Grid item>
-        <Button onClick={land}>Land</Button>
+        <Button onClick={land}>Atterrir</Button>
       </Grid>
       <Grid item>
         <Button
@@ -43,7 +40,7 @@ const ControlDrawer = (props: GridProps) => {
             connect();
           }}
         >
-          Start Simulation
+          Démarrer la Simulation
         </Button>
       </Grid>
     </Grid>

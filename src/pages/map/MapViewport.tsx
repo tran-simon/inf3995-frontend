@@ -2,6 +2,7 @@ import React, { ReactNode, SVGProps, useContext } from 'react';
 import Point from '../../utils/Point';
 
 import CFContext from '../../context/CFContext';
+import { State } from '../../model/Crazyflie';
 
 type MapViewportProps = Partial<SVGProps<SVGSVGElement>> & {
   size?: number;
@@ -43,7 +44,7 @@ const MapViewport = React.forwardRef<SVGSVGElement, MapViewportProps>(
             {...destination}
             fill="red"
           >
-            <title>Wall found by drone: {wall.crazyflie.droneId}</title>
+            <title>Mur trouvé par le drone: {wall.crazyflie.droneId}</title>
           </rect>,
         );
       }
@@ -73,6 +74,7 @@ const MapViewport = React.forwardRef<SVGSVGElement, MapViewportProps>(
             cx={cf.position?.x}
             cy={cf.position?.y}
             fill="blue"
+            stroke={cf.state === State.crashed ? 'red' : undefined}
           >
             <title>{cf.droneId}</title>
           </circle>

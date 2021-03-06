@@ -57,7 +57,7 @@ export const Controls = () => {
   return (
     <List>
       <ControlSection icon={<RefreshIcon />} onClick={scan}>
-        Scan
+        Balayer
       </ControlSection>
 
       <ListItem
@@ -74,7 +74,7 @@ export const Controls = () => {
             <ToggleOffOutlinedIcon />
           )}
         </ListItemIcon>
-        <ListItemText>Use Mocked crazyflies</ListItemText>
+        <ListItemText>Utiliser les crazyflies simulés</ListItemText>
       </ListItem>
 
       <ListItem
@@ -86,7 +86,7 @@ export const Controls = () => {
         <ListItemIcon>
           {refreshRate ? <ToggleOnOutlinedIcon /> : <ToggleOffOutlinedIcon />}
         </ListItemIcon>
-        <ListItemText>Auto-refresh</ListItemText>
+        <ListItemText>Rafraîchissement Automatique</ListItemText>
       </ListItem>
       <Divider />
       <ListItem>
@@ -95,7 +95,7 @@ export const Controls = () => {
         </ListItemIcon>
 
         <TextField
-          label={'Backend URL'}
+          label={'URL du serveur'}
           value={backendUrl}
           onChange={(event) => {
             setBackendUrl(event.target.value);
