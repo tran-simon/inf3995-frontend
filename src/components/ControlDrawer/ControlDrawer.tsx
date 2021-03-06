@@ -7,10 +7,13 @@ import {
   useTheme,
 } from '@material-ui/core';
 import CFContext from '../../context/CFContext';
+import { MOCK_BACKEND_URL } from '../../context/useMockedCf';
 
 const ControlDrawer = (props: GridProps) => {
   const theme = useTheme();
-  const { cfList, takeoff, land, connect } = useContext(CFContext);
+  const { cfList, takeoff, land, setBackendUrl, backendUrl } = useContext(
+    CFContext,
+  );
 
   return (
     <Grid
@@ -37,10 +40,11 @@ const ControlDrawer = (props: GridProps) => {
       <Grid item>
         <Button
           onClick={() => {
-            connect();
+            setBackendUrl(MOCK_BACKEND_URL);
           }}
+          disabled={backendUrl === MOCK_BACKEND_URL}
         >
-          Démarrer la Simulation
+          Utiliser les faux crazyflies
         </Button>
       </Grid>
     </Grid>

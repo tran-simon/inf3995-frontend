@@ -30,4 +30,8 @@ export class BackendREST {
   static connect = async (backendUrl?: string) => {
     return fetch(`${backendUrl}/connect`);
   };
+
+  static reset = async (backendUrl?: string, simulation?: boolean) => {
+    return fetch(`${backendUrl}/reset?simulation&=${!!simulation}`);
+  };
 }

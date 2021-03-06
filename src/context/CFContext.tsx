@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import Crazyflie from '../model/Crazyflie';
 import { noop } from 'lodash';
-import { SetState } from '../utils/utils';
+import { SetState } from '../utils';
 import { BackendREST } from '../backendApi/BackendREST';
 import useMockedCf, { MOCK_BACKEND_URL } from './useMockedCf';
 import Wall from '../model/Wall';
@@ -20,6 +20,7 @@ const BACKEND_URL =
 interface ICFContext {
   cfList: Crazyflie[];
   walls: Wall[];
+  simulation?: boolean;
 
   scan: () => Promise<Response | void>;
   updateStats: () => Promise<Response | void>;
@@ -36,11 +37,13 @@ interface ICFContext {
   takeoff: () => Promise<Response | void>;
 
   connect: () => Promise<Response | void>;
+  reset: (simulation: boolean) => Promise<Response | void>;
 }
 
 const DefaultCfContext: ICFContext = {
   cfList: [],
   walls: [],
+  simulation: false,
   scan: async () => {},
   updateStats: async () => {},
   backendUrl: BACKEND_URL,
@@ -50,6 +53,7 @@ const DefaultCfContext: ICFContext = {
   land: async () => {},
   takeoff: async () => {},
   connect: async () => {},
+  reset: async () => {},
 };
 
 const CFContext = createContext<ICFContext>(DefaultCfContext);
@@ -70,6 +74,8 @@ export const CFProvider = ({
   const [cfList, setCfList] = useState<Crazyflie[]>(props.cfList || []);
 
   const [walls, setWalls] = useState<Wall[]>(props.walls || []);
+
+  const [simulation, setSimulation] = useState(false);
 
   const { setMockCf } = useMockedCf();
 
@@ -191,10 +197,21 @@ export const CFProvider = ({
     }
   };
 
+  const reset = async (simulation: boolean) => {
+    if (!backendDisconnected) {
+      return BackendREST.reset(backendUrl, simulation).then((res) => {
+        if (res.ok) {
+          setCfList([]);
+          setWalls([]);
+          setSimulation(simulation);
+        }
+      });
+    }
+  };
+
   return (
     <CFContext.Provider
       value={{
-        ...DefaultCfContext,
         ...props,
         backendUrl,
         setBackendUrl,
@@ -208,6 +225,8 @@ export const CFProvider = ({
         land,
         walls,
         connect,
+        reset,
+        simulation,
       }}
     >
       {children}

@@ -14,7 +14,6 @@ import ConnectedIcon from '@material-ui/icons/WifiTethering';
 import DiconnectedIcon from '@material-ui/icons/PortableWifiOff';
 import ToggleOffOutlinedIcon from '@material-ui/icons/ToggleOffOutlined';
 import ToggleOnOutlinedIcon from '@material-ui/icons/ToggleOnOutlined';
-import { MOCK_BACKEND_URL } from '../../context/useMockedCf';
 
 type ControlSectionProps = {
   icon?: ReactNode;
@@ -52,6 +51,8 @@ export const Controls = () => {
     setBackendUrl,
     setRefreshRate,
     refreshRate,
+    simulation,
+    reset,
   } = useContext(CFContext);
 
   return (
@@ -60,35 +61,26 @@ export const Controls = () => {
         Balayer
       </ControlSection>
 
-      <ListItem
-        button
-        onClick={() => {
-          setBackendUrl(MOCK_BACKEND_URL);
-        }}
-      >
-        {/*TODO: Remove after CDR */}
-        <ListItemIcon>
-          {backendUrl === MOCK_BACKEND_URL ? (
-            <ToggleOnOutlinedIcon />
-          ) : (
-            <ToggleOffOutlinedIcon />
-          )}
-        </ListItemIcon>
-        <ListItemText>Utiliser les crazyflies simulés</ListItemText>
-      </ListItem>
-
-      <ListItem
-        button
-        onClick={() => {
+      <ControlSection
+        onClick={async () => {
           setRefreshRate(refreshRate ? 0 : 1000);
         }}
+        icon={
+          refreshRate ? <ToggleOnOutlinedIcon /> : <ToggleOffOutlinedIcon />
+        }
       >
-        <ListItemIcon>
-          {refreshRate ? <ToggleOnOutlinedIcon /> : <ToggleOffOutlinedIcon />}
-        </ListItemIcon>
-        <ListItemText>Rafraîchissement Automatique</ListItemText>
-      </ListItem>
+        Rafraîchissement Automatique
+      </ControlSection>
+
+      <ControlSection
+        icon={simulation ? <ToggleOnOutlinedIcon /> : <ToggleOffOutlinedIcon />}
+        onClick={() => reset(!simulation)}
+      >
+        Mode Simulation
+      </ControlSection>
+
       <Divider />
+
       <ListItem>
         <ListItemIcon>
           {backendDisconnected ? <DiconnectedIcon /> : <ConnectedIcon />}
