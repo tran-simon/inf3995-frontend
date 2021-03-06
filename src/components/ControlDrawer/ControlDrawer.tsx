@@ -10,7 +10,7 @@ import CFContext from '../../context/CFContext';
 
 const ControlDrawer = (props: GridProps) => {
   const theme = useTheme();
-  const { cfList, takeoff, land } = useContext(CFContext);
+  const { cfList, takeoff, land, connect } = useContext(CFContext);
 
   //todo: only takeof selected cfs
   return (
@@ -36,6 +36,15 @@ const ControlDrawer = (props: GridProps) => {
       </Grid>
       <Grid item>
         <Button onClick={land}>Land</Button>
+      </Grid>
+      <Grid item>
+        <Button
+          onClick={() => {
+            connect();
+          }}
+        >
+          Start Simulation
+        </Button>
       </Grid>
     </Grid>
   );

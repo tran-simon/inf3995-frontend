@@ -32,6 +32,8 @@ interface ICFContext {
 
   land: () => Promise<Response | void>;
   takeoff: () => Promise<Response | void>;
+
+  connect: () => Promise<Response | void>;
 }
 
 const DefaultCfContext: ICFContext = {
@@ -45,6 +47,7 @@ const DefaultCfContext: ICFContext = {
 
   land: async () => {},
   takeoff: async () => {},
+  connect: async () => {},
 };
 
 const CFContext = createContext<ICFContext>(DefaultCfContext);
@@ -169,6 +172,12 @@ export const CFProvider = ({
     }
   };
 
+  const connect = async () => {
+    if (!backendDisconnected) {
+      return fetch(`${backendUrl}/connect`);
+    }
+  };
+
   return (
     <CFContext.Provider
       value={{
@@ -185,6 +194,7 @@ export const CFProvider = ({
         takeoff,
         land,
         walls,
+        connect,
       }}
     >
       {children}
