@@ -22,8 +22,6 @@ const Map = () => {
 
   const [cameraPos, setCameraPos] = useState<Point>(newPoint(0, 0));
 
-  const [keyPressed, setKeyPressed] = useState<string | undefined>();
-
   const ratioX =
     mapRef.current && size / mapRef.current.getBoundingClientRect().width;
   const ratioY =
@@ -39,13 +37,6 @@ const Map = () => {
     },
   });
 
-  document.addEventListener('keydown', (event) => {
-    setKeyPressed(event.key);
-  });
-  document.addEventListener('keyup', () => {
-    setKeyPressed(undefined);
-  });
-
   return (
     <>
       <MapViewport
@@ -53,16 +44,17 @@ const Map = () => {
         style={{ position: 'absolute' }}
         ref={mapRef}
         onWheel={(event) => {
-          if (keyPressed === 'Control') {
+          if (event.ctrlKey) {
             setZoom(zoom - event.deltaY);
+            event.preventDefault();
           } else {
             const deltaX = !ratioX
               ? 0
-              : keyPressed !== 'Shift'
+              : !event.shiftKey
               ? event.deltaX * ratioX
               : event.deltaY * ratioX;
             const deltaY =
-              keyPressed === 'Shift' || !ratioY ? 0 : event.deltaY * ratioY;
+              event.shiftKey || !ratioY ? 0 : event.deltaY * ratioY;
 
             setCameraPos(addPoint(cameraPos, newPoint(deltaX, deltaY)));
           }

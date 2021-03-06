@@ -1,11 +1,12 @@
 /* eslint-disable */
-import { useEffect, useState } from 'react';
-import Crazyflie from '../model/Crazyflie';
+import { useCallback, useEffect, useState } from 'react';
+import Crazyflie, { State } from '../model/Crazyflie';
 import Point from '../utils/Point';
 
 export const MOCK_BACKEND_URL = 'MOCK';
 
 const mockCfList: Crazyflie[] = [];
+let started = false;
 
 const initialMockCfs: Crazyflie[] = [
   {
@@ -41,6 +42,13 @@ const useMockedCf = () => {
   };
 
   const updateCf = (cf: Crazyflie, index: number) => {
+    cf.battery = (cf.battery || 100) - 0.001;
+    if (!started) {
+      cf.state = State.standby;
+      return;
+    }
+
+    cf.state = State.inMission;
     if (cf.position) {
       const { x, y } = cf.position;
       switch (index) {
@@ -56,14 +64,21 @@ const useMockedCf = () => {
               east: 11 - x,
             };
           }
+          cf.speed = 1;
           break;
         case 1:
-          moveCfBy(cf, { x: 0, y: 1 });
+          if (y < 10) {
+            moveCfBy(cf, { x: 0, y: 1 });
 
-          cf.sensors = {
-            west: y > 6 ? 20 : undefined,
-            east: y < 4 ? 10 : undefined,
-          };
+            cf.sensors = {
+              west: y > 6 ? 20 : undefined,
+              east: y < 4 ? 10 : undefined,
+            };
+            cf.speed = 1;
+          } else {
+            cf.state = State.crashed;
+          }
+
           break;
         case 2:
           if (x > -25) {
@@ -71,34 +86,35 @@ const useMockedCf = () => {
             cf.sensors = {
               west: 4,
             };
+            cf.speed = Math.sqrt(2);
           } else {
             moveCfBy(cf, { x: 0, y: -1 });
             cf.sensors = {
               west: 30 - y,
             };
+            cf.speed = 1;
           }
           break;
       }
     }
-    cf.battery = (cf.battery || 100) - 0.001;
   };
+  const mockUpdateStats = useCallback(() => {
+    mockCfList.forEach(updateCf);
+    return JSON.stringify(mockCfList);
+  }, []);
 
-  const mockScan = () => {
+  const mockScan = useCallback(() => {
     mockCfList.length = 0;
     for (let i = 0; i < mockCfCount; i++) {
       mockCfList.push({
         droneId: `MOCKED_${i}`,
+        state: 'Standby',
         ...initialMockCfs[i],
       });
     }
 
     return mockUpdateStats();
-  };
-
-  const mockUpdateStats = () => {
-    mockCfList.forEach(updateCf);
-    return JSON.stringify(mockCfList);
-  };
+  }, [mockUpdateStats]);
 
   useEffect(() => {
     // based on https://stackoverflow.com/a/53448336/6592293
@@ -120,6 +136,11 @@ const useMockedCf = () => {
                 body = mockScan();
               } else if (url.endsWith('updateStats')) {
                 body = mockUpdateStats();
+              } else if (url.endsWith('takeOff')) {
+                console.log('TAEKADSF');
+                started = true;
+              } else if (url.endsWith('land')) {
+                started = false;
               }
 
               if (body) {
@@ -140,7 +161,7 @@ const useMockedCf = () => {
         });
       };
     }
-  }, [mockCf]);
+  }, [mockCf, mockScan, mockUpdateStats]);
 
   return {
     mockCf,
