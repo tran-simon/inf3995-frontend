@@ -1,4 +1,4 @@
-import { Point } from '../utils/utils';
+import Point from '../utils/Point';
 
 export default interface Crazyflie {
   droneId?: string;

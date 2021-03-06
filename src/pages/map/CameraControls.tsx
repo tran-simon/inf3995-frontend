@@ -7,7 +7,8 @@ import {
 } from '@material-ui/core';
 import MyLocationIcon from '@material-ui/icons/MyLocation';
 import React from 'react';
-import { Point, SetState } from '../../utils/utils';
+import { SetState } from '../../utils';
+import Point, { newPoint } from '../../utils/Point';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -44,16 +45,13 @@ const CameraControls = ({
         <Slider
           orientation="vertical"
           value={cameraPos.y}
-          onChange={(e, v) => setCameraPos({ x: cameraPos.x, y: v as number })}
+          onChange={(e, v) => setCameraPos(newPoint(cameraPos.x, v as number))}
           max={max}
           min={-max}
         />
         <IconButton
           onClick={() => {
-            setCameraPos({
-              x: 0,
-              y: 0,
-            });
+            setCameraPos(newPoint());
           }}
         >
           <MyLocationIcon />
@@ -61,7 +59,7 @@ const CameraControls = ({
       </Box>
       <Slider
         value={cameraPos.x}
-        onChange={(e, v) => setCameraPos({ y: cameraPos.y, x: v as number })}
+        onChange={(e, v) => setCameraPos(newPoint(cameraPos.y, v as number))}
         max={max}
         min={-max}
       />

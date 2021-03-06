@@ -4,7 +4,7 @@ import MapViewport from './MapViewport';
 import CameraControls from './CameraControls';
 import { useMouseHandler } from '../../hooks';
 import { DEFAULT_ZOOM } from '../../utils/constants';
-import { Point } from '../../utils/utils';
+import Point, { addPoint, newPoint } from '../../utils/Point';
 
 /**
  *
@@ -20,9 +20,9 @@ const Map = () => {
   const [zoom, setZoom] = useState(DEFAULT_ZOOM);
   const size = (DEFAULT_ZOOM * DEFAULT_ZOOM) / zoom;
 
-  const [cameraPos, setCameraPos] = useState<Point>({ x: 0, y: 0 });
+  const [cameraPos, setCameraPos] = useState<Point>(newPoint(0, 0));
 
-  const [shiftPressed, setShiftPressed] = useState(false);
+  const [keyPressed, setKeyPressed] = useState<string | undefined>();
 
   const ratioX =
     mapRef.current && size / mapRef.current.getBoundingClientRect().width;
@@ -34,19 +34,16 @@ const Map = () => {
       if (ratioX && ratioY) {
         const x = cameraPos.x - (event.clientX - origin.x) * ratioX;
         const y = cameraPos.y - (event.clientY - origin.y) * ratioY;
-        setCameraPos({
-          x,
-          y,
-        });
+        setCameraPos(newPoint(x, y));
       }
     },
   });
 
   document.addEventListener('keydown', (event) => {
-    event.key === 'Shift' && setShiftPressed(true);
+    setKeyPressed(event.key);
   });
-  document.addEventListener('keyup', (event) => {
-    event.key === 'Shift' && setShiftPressed(false);
+  document.addEventListener('keyup', () => {
+    setKeyPressed(undefined);
   });
 
   return (
@@ -56,13 +53,19 @@ const Map = () => {
         style={{ position: 'absolute' }}
         ref={mapRef}
         onWheel={(event) => {
-          const deltaX = !shiftPressed || !ratioX ? 0 : event.deltaY * ratioX;
-          const deltaY = shiftPressed || !ratioY ? 0 : event.deltaY * ratioY;
+          if (keyPressed === 'Control') {
+            setZoom(zoom - event.deltaY);
+          } else {
+            const deltaX = !ratioX
+              ? 0
+              : keyPressed !== 'Shift'
+              ? event.deltaX * ratioX
+              : event.deltaY * ratioX;
+            const deltaY =
+              keyPressed === 'Shift' || !ratioY ? 0 : event.deltaY * ratioY;
 
-          setCameraPos({
-            x: cameraPos.x + deltaX,
-            y: cameraPos.y + deltaY,
-          });
+            setCameraPos(addPoint(cameraPos, newPoint(deltaX, deltaY)));
+          }
         }}
         {...mouseHandler}
       />

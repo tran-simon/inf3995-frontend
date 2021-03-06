@@ -26,4 +26,8 @@ export class BackendREST {
   static liveCheck = async (backendUrl?: string) => {
     return fetch(`${backendUrl}/liveCheck`);
   };
+
+  static connect = async (backendUrl?: string) => {
+    return fetch(`${backendUrl}/connect`);
+  };
 }

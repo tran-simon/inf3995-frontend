@@ -11,6 +11,8 @@ import { SetState } from '../utils/utils';
 import { BackendREST } from '../backendApi/BackendREST';
 import useMockedCf, { MOCK_BACKEND_URL } from './useMockedCf';
 import Wall from '../model/Wall';
+import { SENSOR_MAX_RANGE } from '../utils/constants';
+import { addPoint, newPoint, scalePoint } from '../utils/Point';
 
 const BACKEND_URL =
   process.env.REACT_APP_BACKEND_URL ?? 'http://localhost:5000';
@@ -82,39 +84,50 @@ export const CFProvider = ({
     const sensors = crazyflie.sensors ?? {};
     const cfPos = crazyflie.position;
 
-    Object.keys(sensors).forEach((key) => {
-      const v = sensors[key];
-      if (v && cfPos) {
-        let xScale = 1,
-          yScale = 1;
-        switch (key) {
-          case 'north':
-            xScale = 0;
-            break;
-          case 'south':
-            yScale = -1;
-            xScale = 0;
-            break;
-          case 'east':
-            yScale = 0;
-            break;
-          case 'west':
-            xScale = -1;
-            yScale = 0;
-            break;
-          default:
-            break;
-        }
+    for (let i = 0; i < 4; i++) {
+      let v: number | undefined;
 
+      let xScale = 1,
+        yScale = 1;
+      switch (i) {
+        case 0:
+          xScale = 0;
+          v = sensors.north;
+          break;
+        case 1:
+          yScale = -1;
+          xScale = 0;
+          v = sensors.south;
+          break;
+        case 2:
+          yScale = 0;
+          v = sensors.east;
+          break;
+        case 3:
+          xScale = -1;
+          yScale = 0;
+          v = sensors.west;
+          break;
+        default:
+          break;
+      }
+
+      const notDetected = v == null || v >= SENSOR_MAX_RANGE;
+      if (notDetected) {
+        v = SENSOR_MAX_RANGE;
+      }
+
+      if (cfPos) {
         res.push({
           crazyflie,
-          position: {
-            x: cfPos.x + v * xScale,
-            y: cfPos.y + v * yScale,
-          },
+          position: addPoint(
+            cfPos,
+            scalePoint(newPoint(xScale, yScale), v ?? SENSOR_MAX_RANGE),
+          ),
+          outOfRange: notDetected,
         });
       }
-    });
+    }
 
     return res;
   };
@@ -174,7 +187,7 @@ export const CFProvider = ({
 
   const connect = async () => {
     if (!backendDisconnected) {
-      return fetch(`${backendUrl}/connect`);
+      return BackendREST.connect(backendUrl);
     }
   };
 

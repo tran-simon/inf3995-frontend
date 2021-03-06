@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { useEffect, useState } from 'react';
 import Crazyflie from '../model/Crazyflie';
-import { Point } from '../utils/utils';
+import Point from '../utils/Point';
 
 export const MOCK_BACKEND_URL = 'MOCK';
 
@@ -62,8 +62,7 @@ const useMockedCf = () => {
 
           cf.sensors = {
             west: y > 6 ? 20 : undefined,
-            south: 5 + y,
-            east: y < 4 ? 10 : 0,
+            east: y < 4 ? 10 : undefined,
           };
           break;
         case 2:

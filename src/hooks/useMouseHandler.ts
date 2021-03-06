@@ -1,5 +1,5 @@
 import { MouseEvent, MouseEventHandler, useState } from 'react';
-import { Point } from '../utils/utils';
+import Point, { newPoint } from '../utils/Point';
 
 interface IMouseHandler {
   onMouseDown: MouseEventHandler;
@@ -16,7 +16,7 @@ const useMouseHandler = (
 
   const onMouseDown = (event: MouseEvent) => {
     const { clientX, clientY } = event;
-    setDragOrigin({ x: clientX, y: clientY });
+    setDragOrigin(newPoint(clientX, clientY));
     props?.onMouseDown && props.onMouseDown(event);
   };
   const onMouseUp = (event: MouseEvent) => {
@@ -28,7 +28,7 @@ const useMouseHandler = (
     if (dragOrigin !== null) {
       props?.onMouseDrag && props.onMouseDrag(event, dragOrigin);
       const { clientX, clientY } = event.nativeEvent;
-      setDragOrigin({ x: clientX, y: clientY });
+      setDragOrigin(newPoint(clientX, clientY));
     }
   };
 
