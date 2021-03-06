@@ -45,9 +45,9 @@ export const CFDrawer = ({ children, ...props }: DrawerProps) => {
               <ListItem button key={i}>
                 <ListItemIcon style={{ width: '1rem', marginRight: '1rem' }}>
                   <CircularProgressbar
-                    circleRatio={15}
+                    circleRatio={1}
                     value={batteryPer}
-                    text={`${batteryPer.toFixed(2)} %`}
+                    text={`${batteryPer} %`}
                   />
                 </ListItemIcon>
                 <ListItemText
