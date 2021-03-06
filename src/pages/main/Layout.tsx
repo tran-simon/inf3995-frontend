@@ -56,9 +56,9 @@ const useStyles = makeStyles((theme) => {
     },
 
     content: {
-      overflow: 'auto',
-      padding: '1rem',
+      overflow: 'hidden',
       flexGrow: 1,
+      position: 'relative',
     },
   });
 });

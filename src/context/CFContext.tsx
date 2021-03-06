@@ -8,12 +8,18 @@ import React, {
 import Crazyflie from '../model/Crazyflie';
 import { noop } from 'lodash';
 import { SetState } from '../utils/utils';
+import { BackendREST } from '../backendApi/BackendREST';
+import useMockedCf, { MOCK_BACKEND_URL } from './useMockedCf';
+import Wall from '../model/Wall';
+import { SENSOR_MAX_RANGE } from '../utils/constants';
+import { addPoint, newPoint, scalePoint } from '../utils/Point';
 
 const BACKEND_URL =
   process.env.REACT_APP_BACKEND_URL ?? 'http://localhost:5000';
 
 interface ICFContext {
   cfList: Crazyflie[];
+  walls: Wall[];
 
   scan: () => Promise<Response | void>;
   updateStats: () => Promise<Response | void>;
@@ -34,11 +40,11 @@ interface ICFContext {
 
 const DefaultCfContext: ICFContext = {
   cfList: [],
+  walls: [],
   scan: async () => {},
   updateStats: async () => {},
   backendUrl: BACKEND_URL,
   setBackendUrl: noop,
-
   setRefreshRate: noop,
 
   land: async () => {},
@@ -60,20 +66,77 @@ export const CFProvider = ({
   const [backendUrl, setBackendUrl] = useState<string | undefined>(
     props.backendUrl ?? BACKEND_URL,
   );
-  const [backendDisconnected, setBackendDisconnected] = useState(
-    props.backendDisconnected ?? !!backendUrl,
-  );
+  const [backendDisconnected, setBackendDisconnected] = useState(true);
   const [cfList, setCfList] = useState<Crazyflie[]>(props.cfList || []);
+
+  const [walls, setWalls] = useState<Wall[]>(props.walls || []);
+
+  const { setMockCf } = useMockedCf();
+
+  useEffect(() => {
+    if (backendUrl === MOCK_BACKEND_URL) {
+      setMockCf(true);
+    }
+  }, [setMockCf, backendUrl]);
+
+  const getWalls = (crazyflie: Crazyflie): Wall[] => {
+    const res: Wall[] = [];
+    const sensors = crazyflie.sensors ?? {};
+    const cfPos = crazyflie.position;
+
+    for (let i = 0; i < 4; i++) {
+      let v: number | undefined;
+
+      let xScale = 1,
+        yScale = 1;
+      switch (i) {
+        case 0:
+          xScale = 0;
+          v = sensors.north;
+          break;
+        case 1:
+          yScale = -1;
+          xScale = 0;
+          v = sensors.south;
+          break;
+        case 2:
+          yScale = 0;
+          v = sensors.east;
+          break;
+        case 3:
+          xScale = -1;
+          yScale = 0;
+          v = sensors.west;
+          break;
+        default:
+          break;
+      }
+
+      const notDetected = v == null || v >= SENSOR_MAX_RANGE;
+      if (notDetected) {
+        v = SENSOR_MAX_RANGE;
+      }
+
+      if (cfPos) {
+        res.push({
+          crazyflie,
+          position: addPoint(
+            cfPos,
+            scalePoint(newPoint(xScale, yScale), v ?? SENSOR_MAX_RANGE),
+          ),
+          outOfRange: notDetected,
+        });
+      }
+    }
+
+    return res;
+  };
 
   const scan = useCallback(async () => {
     if (!backendDisconnected) {
-      return fetch(`${backendUrl}/scan`).then((res) => {
-        if (res.ok) {
-          res.json().then((value) => {
-            if (Array.isArray(value)) {
-              setCfList(value);
-            }
-          });
+      return BackendREST.scan(backendUrl).then((value) => {
+        if (Array.isArray(value)) {
+          setCfList(value);
         }
       });
     }
@@ -81,28 +144,26 @@ export const CFProvider = ({
 
   const updateStats = useCallback(async () => {
     if (!backendDisconnected) {
-      return fetch(`${backendUrl}/updateStats`).then((res) => {
-        if (res.ok) {
-          return res.json().then((val) => {
-            if (Array.isArray(val)) {
-              setCfList(val);
-            }
-          });
+      return BackendREST.updateStats(backendUrl).then((val) => {
+        if (Array.isArray(val)) {
+          setCfList(val);
+          const newWalls = val.flatMap((cf: Crazyflie) => getWalls(cf));
+          setWalls([...walls, ...newWalls]);
         }
       });
     }
-  }, [backendUrl, backendDisconnected]);
+  }, [backendUrl, backendDisconnected, walls, setWalls]);
 
   useEffect(() => {
-    fetch(`${backendUrl}/liveCheck`)
+    BackendREST.liveCheck(backendUrl)
       .then((response) => {
         setBackendDisconnected(!response.ok);
       })
-      .then(updateStats)
       .catch(() => {
-        setBackendDisconnected(true);
+        //todo: uncomment after cdr
+        // setBackendDisconnected(true);
       });
-  }, [backendUrl, updateStats]);
+  }, [backendUrl, setBackendDisconnected]);
 
   useEffect(() => {
     if (!backendDisconnected && !!refreshRate) {
@@ -115,18 +176,18 @@ export const CFProvider = ({
 
   const takeoff = async () => {
     if (!backendDisconnected) {
-      return fetch(`${backendUrl}/takeOff`);
+      return BackendREST.takeoff(backendUrl);
     }
   };
   const land = async () => {
     if (!backendDisconnected) {
-      return fetch(`${backendUrl}/land`);
+      return BackendREST.land(backendUrl);
     }
   };
 
   const connect = async () => {
     if (!backendDisconnected) {
-      return fetch(`${backendUrl}/connect`);
+      return BackendREST.connect(backendUrl);
     }
   };
 
@@ -145,6 +206,7 @@ export const CFProvider = ({
         cfList,
         takeoff,
         land,
+        walls,
         connect,
       }}
     >

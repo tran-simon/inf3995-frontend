@@ -14,6 +14,7 @@ import ConnectedIcon from '@material-ui/icons/WifiTethering';
 import DiconnectedIcon from '@material-ui/icons/PortableWifiOff';
 import ToggleOffOutlinedIcon from '@material-ui/icons/ToggleOffOutlined';
 import ToggleOnOutlinedIcon from '@material-ui/icons/ToggleOnOutlined';
+import { MOCK_BACKEND_URL } from '../../context/useMockedCf';
 
 type ControlSectionProps = {
   icon?: ReactNode;
@@ -58,6 +59,24 @@ export const Controls = () => {
       <ControlSection icon={<RefreshIcon />} onClick={scan}>
         Scan
       </ControlSection>
+
+      <ListItem
+        button
+        onClick={() => {
+          setBackendUrl(MOCK_BACKEND_URL);
+        }}
+      >
+        {/*TODO: Remove after CDR */}
+        <ListItemIcon>
+          {backendUrl === MOCK_BACKEND_URL ? (
+            <ToggleOnOutlinedIcon />
+          ) : (
+            <ToggleOffOutlinedIcon />
+          )}
+        </ListItemIcon>
+        <ListItemText>Use Mocked crazyflies</ListItemText>
+      </ListItem>
+
       <ListItem
         button
         onClick={() => {
