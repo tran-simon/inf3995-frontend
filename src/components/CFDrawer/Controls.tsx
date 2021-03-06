@@ -32,7 +32,7 @@ const ControlSection = ({
       button
       onClick={() => {
         setLoading(true);
-        onClick().then(() => setLoading(false));
+        onClick().finally(() => setLoading(false));
       }}
     >
       <ListItemIcon>

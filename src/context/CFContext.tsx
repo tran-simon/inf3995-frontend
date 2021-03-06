@@ -195,7 +195,9 @@ export const CFProvider = ({
         if (res.ok) {
           setCfList([]);
           setWalls([]);
-          setSimulation(simulation);
+          res.json().then((a) => {
+            setSimulation(a);
+          });
         }
       });
     }

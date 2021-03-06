@@ -28,6 +28,6 @@ export class BackendREST {
   };
 
   static reset = async (backendUrl?: string, simulation?: boolean) => {
-    return fetch(`${backendUrl}/reset?simulation&=${!!simulation}`);
+    return fetch(`${backendUrl}/reset?simulation=${!!simulation}`);
   };
 }
