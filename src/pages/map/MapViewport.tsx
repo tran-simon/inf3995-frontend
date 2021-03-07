@@ -67,18 +67,20 @@ const MapViewport = React.forwardRef<SVGSVGElement, MapViewportProps>(
         {linesSvg}
         {wallsSvg}
 
-        {cfList.map((cf, i) => (
-          <circle
-            key={i}
-            r="1"
-            cx={cf.position?.x}
-            cy={cf.position?.y}
-            fill="blue"
-            stroke={cf.state === State.crashed ? 'red' : undefined}
-          >
-            <title>{cf.droneId}</title>
-          </circle>
-        ))}
+        {cfList.map((cf, i) =>
+          cf.position ? (
+            <circle
+              key={i}
+              r="1"
+              cx={cf.position?.x}
+              cy={cf.position?.y}
+              fill="blue"
+              stroke={cf.state === State.crashed ? 'red' : undefined}
+            >
+              <title>{cf.droneId}</title>
+            </circle>
+          ) : null,
+        )}
       </svg>
     );
   },
