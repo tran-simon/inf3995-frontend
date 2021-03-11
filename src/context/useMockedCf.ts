@@ -137,7 +137,6 @@ const useMockedCf = () => {
               } else if (url.endsWith('updateStats')) {
                 body = mockUpdateStats();
               } else if (url.endsWith('takeOff')) {
-                console.log('TAEKADSF');
                 started = true;
               } else if (url.endsWith('land')) {
                 started = false;
