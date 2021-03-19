@@ -5,13 +5,11 @@ import Map from '../map';
 
 function Main() {
   return (
-    <div>
-      <CFProvider>
-        <Layout>
-          <Map />
-        </Layout>
-      </CFProvider>
-    </div>
+    <CFProvider>
+      <Layout>
+        <Map />
+      </Layout>
+    </CFProvider>
   );
 }
 

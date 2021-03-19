@@ -56,6 +56,59 @@ const DefaultCfContext: ICFContext = {
 
 const CFContext = createContext<ICFContext>(DefaultCfContext);
 
+export const getWalls = (crazyflie: Crazyflie): Wall[] => {
+  const res: Wall[] = [];
+  const sensors = crazyflie.sensors ?? {};
+  const cfPos = crazyflie.position;
+
+  for (let i = 0; i < 4; i++) {
+    let v: number | undefined;
+
+    let xScale = 1,
+      yScale = 1;
+    switch (i) {
+      case 0:
+        xScale = 0;
+        v = sensors.north;
+        break;
+      case 1:
+        yScale = -1;
+        xScale = 0;
+        v = sensors.south;
+        break;
+      case 2:
+        yScale = 0;
+        v = sensors.east;
+        break;
+      case 3:
+        xScale = -1;
+        yScale = 0;
+        v = sensors.west;
+        break;
+      default:
+        break;
+    }
+
+    const notDetected = v == null || v >= SENSOR_MAX_RANGE;
+    if (notDetected) {
+      v = SENSOR_MAX_RANGE;
+    }
+
+    if (cfPos) {
+      res.push({
+        crazyflie,
+        position: addPoint(
+          cfPos,
+          scalePoint(newPoint(xScale, yScale), v ?? SENSOR_MAX_RANGE),
+        ),
+        outOfRange: notDetected,
+      });
+    }
+  }
+
+  return res;
+};
+
 export const CFProvider = ({
   children,
   ...props
@@ -82,59 +135,6 @@ export const CFProvider = ({
       setMockCf(true);
     }
   }, [setMockCf, backendUrl]);
-
-  const getWalls = (crazyflie: Crazyflie): Wall[] => {
-    const res: Wall[] = [];
-    const sensors = crazyflie.sensors ?? {};
-    const cfPos = crazyflie.position;
-
-    for (let i = 0; i < 4; i++) {
-      let v: number | undefined;
-
-      let xScale = 1,
-        yScale = 1;
-      switch (i) {
-        case 0:
-          xScale = 0;
-          v = sensors.north;
-          break;
-        case 1:
-          yScale = -1;
-          xScale = 0;
-          v = sensors.south;
-          break;
-        case 2:
-          yScale = 0;
-          v = sensors.east;
-          break;
-        case 3:
-          xScale = -1;
-          yScale = 0;
-          v = sensors.west;
-          break;
-        default:
-          break;
-      }
-
-      const notDetected = v == null || v >= SENSOR_MAX_RANGE;
-      if (notDetected) {
-        v = SENSOR_MAX_RANGE;
-      }
-
-      if (cfPos) {
-        res.push({
-          crazyflie,
-          position: addPoint(
-            cfPos,
-            scalePoint(newPoint(xScale, yScale), v ?? SENSOR_MAX_RANGE),
-          ),
-          outOfRange: notDetected,
-        });
-      }
-    }
-
-    return res;
-  };
 
   const scan = useCallback(async () => {
     if (!backendDisconnected) {

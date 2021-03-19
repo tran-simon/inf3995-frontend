@@ -1,0 +1,228 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Map can match snapshot 1`] = `
+Array [
+  <svg
+    height="100%"
+    id="map-viewport"
+    onMouseDown={[Function]}
+    onMouseMove={[Function]}
+    onMouseUp={[Function]}
+    onWheel={[Function]}
+    style={
+      Object {
+        "backgroundColor": "grey",
+        "position": "absolute",
+      }
+    }
+    viewBox="0 0 100 100"
+    width="100%"
+  >
+    <defs>
+      <filter
+        filterUnits="userSpaceOnUse"
+        id="f1"
+        x="0"
+        y="0"
+      >
+        <feGaussianBlur
+          in="SourceGraphic"
+          stdDeviation="5"
+        />
+      </filter>
+    </defs>
+  </svg>,
+  <div
+    className="MuiGrid-root MuiGrid-container MuiGrid-align-content-xs-space-between"
+    style={
+      Object {
+        "height": "100%",
+        "padding": "1rem",
+      }
+    }
+  >
+    <div
+      className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-item MuiGrid-grid-xs-12"
+    >
+      <div
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-4"
+      >
+        <span
+          className="MuiSlider-root MuiSlider-colorPrimary"
+          id="slider-zoom"
+          onMouseDown={[Function]}
+        >
+          <span
+            className="MuiSlider-rail"
+          />
+          <span
+            className="MuiSlider-track"
+            style={
+              Object {
+                "left": "0%",
+                "width": "49.74874371859296%",
+              }
+            }
+          />
+          <input
+            type="hidden"
+            value="100"
+          />
+          <span
+            aria-orientation="horizontal"
+            aria-valuemax={200}
+            aria-valuemin={1}
+            aria-valuenow={100}
+            className="MuiSlider-thumb MuiSlider-thumbColorPrimary"
+            data-index={0}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseOver={[Function]}
+            role="slider"
+            style={
+              Object {
+                "left": "49.74874371859296%",
+              }
+            }
+            tabIndex={0}
+          />
+        </span>
+      </div>
+    </div>
+    <div
+      className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-4"
+      style={
+        Object {
+          "height": "50%",
+        }
+      }
+    >
+      <div
+        className="MuiBox-root MuiBox-root-8 makeStyles-root-6"
+      >
+        <div
+          className="MuiBox-root MuiBox-root-9 makeStyles-leftSection-7"
+        >
+          <span
+            className="MuiSlider-root MuiSlider-colorPrimary MuiSlider-vertical"
+            onMouseDown={[Function]}
+          >
+            <span
+              className="MuiSlider-rail"
+            />
+            <span
+              className="MuiSlider-track"
+              style={
+                Object {
+                  "bottom": "0%",
+                  "height": "50%",
+                }
+              }
+            />
+            <input
+              type="hidden"
+              value="0"
+            />
+            <span
+              aria-orientation="vertical"
+              aria-valuemax={100}
+              aria-valuemin={-100}
+              aria-valuenow={0}
+              className="MuiSlider-thumb MuiSlider-thumbColorPrimary"
+              data-index={0}
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseOver={[Function]}
+              role="slider"
+              style={
+                Object {
+                  "bottom": "50%",
+                }
+              }
+              tabIndex={0}
+            />
+          </span>
+          <button
+            className="MuiButtonBase-root MuiIconButton-root"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={0}
+            type="button"
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+        <span
+          className="MuiSlider-root MuiSlider-colorPrimary"
+          onMouseDown={[Function]}
+        >
+          <span
+            className="MuiSlider-rail"
+          />
+          <span
+            className="MuiSlider-track"
+            style={
+              Object {
+                "left": "0%",
+                "width": "50%",
+              }
+            }
+          />
+          <input
+            type="hidden"
+            value="0"
+          />
+          <span
+            aria-orientation="horizontal"
+            aria-valuemax={100}
+            aria-valuemin={-100}
+            aria-valuenow={0}
+            className="MuiSlider-thumb MuiSlider-thumbColorPrimary"
+            data-index={0}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseOver={[Function]}
+            role="slider"
+            style={
+              Object {
+                "left": "50%",
+              }
+            }
+            tabIndex={0}
+          />
+        </span>
+      </div>
+    </div>
+  </div>,
+]
+`;

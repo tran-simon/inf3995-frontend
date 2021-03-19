@@ -1,0 +1,137 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MapViewport can match snapshot 1`] = `
+<svg
+  height="100%"
+  id="map-viewport"
+  style={
+    Object {
+      "backgroundColor": "grey",
+    }
+  }
+  width="100%"
+>
+  <defs>
+    <filter
+      filterUnits="userSpaceOnUse"
+      id="f1"
+      x="0"
+      y="0"
+    >
+      <feGaussianBlur
+        in="SourceGraphic"
+        stdDeviation="5"
+      />
+    </filter>
+  </defs>
+  <line
+    stroke="white"
+    strokeLinecap="round"
+    strokeOpacity="0.8"
+    strokeWidth={3}
+    x1={10}
+    x2={30}
+    y1={10}
+    y2={10}
+  />
+  <line
+    stroke="white"
+    strokeLinecap="round"
+    strokeOpacity="0.8"
+    strokeWidth={3}
+    x1={10}
+    x2={35}
+    y1={10}
+    y2={10}
+  />
+  <line
+    stroke="white"
+    strokeLinecap="round"
+    strokeOpacity="0.8"
+    strokeWidth={3}
+    x1={20}
+    x2={10}
+    y1={10}
+    y2={15}
+  />
+  <line
+    stroke="white"
+    strokeLinecap="round"
+    strokeOpacity="0.8"
+    strokeWidth={3}
+    x1={20}
+    x2={10}
+    y1={10}
+    y2={20}
+  />
+  <rect
+    fill="red"
+    height="1"
+    width="1"
+    x={30}
+    y={10}
+  >
+    <title>
+      Mur trouvé par le drone: 
+      cf_0
+    </title>
+  </rect>
+  <rect
+    fill="red"
+    height="1"
+    width="1"
+    x={35}
+    y={10}
+  >
+    <title>
+      Mur trouvé par le drone: 
+      cf_0
+    </title>
+  </rect>
+  <rect
+    fill="red"
+    height="1"
+    width="1"
+    x={10}
+    y={15}
+  >
+    <title>
+      Mur trouvé par le drone: 
+      cf_1
+    </title>
+  </rect>
+  <rect
+    fill="red"
+    height="1"
+    width="1"
+    x={10}
+    y={20}
+  >
+    <title>
+      Mur trouvé par le drone: 
+      cf_1
+    </title>
+  </rect>
+  <circle
+    cx={10}
+    cy={10}
+    fill="blue"
+    r="1"
+  >
+    <title>
+      cf_0
+    </title>
+  </circle>
+  <circle
+    cx={20}
+    cy={10}
+    fill="blue"
+    r="1"
+    stroke="red"
+  >
+    <title>
+      cf_1
+    </title>
+  </circle>
+</svg>
+`;
