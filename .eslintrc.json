@@ -33,7 +33,7 @@
 			0,
 			["object"]
 		],
-		"prettier/prettier": ["error", {
+		"prettier/prettier": ["warn", {
     		"endOfLine":"auto"
   		}],
 		"react-hooks/exhaustive-deps": "warn"

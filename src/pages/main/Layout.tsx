@@ -2,7 +2,13 @@ import React, { ReactNode, useState } from 'react';
 import {
   AppBar,
   Box,
+  Button,
   createStyles,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
   IconButton,
   makeStyles,
@@ -14,6 +20,8 @@ import ControlDrawer from '../../components/ControlDrawer/ControlDrawer';
 import clsx from 'clsx';
 
 import MenuIcon from '@material-ui/icons/Menu';
+import SaveIcon from '@material-ui/icons/Save';
+import { useHistory, useParams } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -65,6 +73,9 @@ const useStyles = makeStyles((theme) => {
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const [open, setOpen] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const { mapId } = useParams<any>();
+  const history = useHistory();
   const classes = useStyles();
 
   return (
@@ -80,7 +91,20 @@ const Layout = ({ children }: { children: ReactNode }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography>Centre de contrôle des Crazyflies</Typography>
+          <Typography>Centre de contrôle des Crazyflies: {mapId}</Typography>
+
+          <IconButton style={{ marginLeft: 'auto', marginRight: '1rem' }}>
+            <SaveIcon />
+          </IconButton>
+
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpenConfirm(true);
+            }}
+          >
+            Retour
+          </Button>
         </Toolbar>
       </AppBar>
       <CFDrawer
@@ -108,6 +132,38 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <main className={classes.content}>{children}</main>
         <ControlDrawer />
       </Box>
+      <Dialog
+        maxWidth="lg"
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+      >
+        <DialogTitle>Voulez-vous vraiment quitter?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Les données non-sauvegardées seront perdues
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenConfirm(false)}>Annuler</Button>
+          <Button
+            onClick={() => {
+              //todo  save
+              setOpenConfirm(false);
+              history.push('/');
+            }}
+          >
+            Sauvegarder et Quitter
+          </Button>
+          <Button
+            onClick={() => {
+              setOpenConfirm(false);
+              history.push('/');
+            }}
+          >
+            Quitter
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
