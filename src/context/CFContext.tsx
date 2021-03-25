@@ -55,21 +55,6 @@ const DefaultCfContext: ICFContext = {
 
 const CFContext = createContext<ICFContext>(DefaultCfContext);
 
-const crazyflieDtoArrToCfList = (crazyflieDtoArr: CrazyflieDTO[]) => {
-  const cfList: KeyArray<Crazyflie> = {};
-  crazyflieDtoArr.forEach((v) => {
-    const { droneId, ...cf } = v;
-    if (droneId) {
-      cfList[droneId] = {
-        ...cf,
-        data: cf.data ?? [],
-      };
-    }
-  });
-
-  return cfList;
-};
-
 export const CFProvider = ({
   children,
   ...props
@@ -94,25 +79,46 @@ export const CFProvider = ({
 
   const { setMockCf } = useMockedCf(cfList);
 
+  const updateCfList = useCallback(
+    (val: any) => {
+      if (Array.isArray(val)) {
+        const newCfList = { ...cfList };
+        val.forEach((v: CrazyflieDTO) => {
+          const { droneId, battery, speed, state } = v;
+
+          if (droneId) {
+            const cf = cfList[droneId];
+            const data = cf?.data || [];
+            if (v.cfData) {
+              data.push(v.cfData);
+            }
+
+            newCfList[droneId] = {
+              ...cf,
+              battery,
+              speed,
+              state,
+              data: data,
+            };
+          }
+        });
+        setCfList(newCfList);
+      }
+    },
+    [cfList, setCfList],
+  );
+
   const scan = useCallback(async () => {
     if (!backendDisconnected) {
-      return BackendREST.scan(backendUrl).then((value) => {
-        if (Array.isArray(value)) {
-          setCfList(crazyflieDtoArrToCfList(value));
-        }
-      });
+      return BackendREST.scan(backendUrl).then(updateCfList);
     }
-  }, [backendUrl, backendDisconnected, setCfList]);
+  }, [backendUrl, backendDisconnected, updateCfList]);
 
   const updateStats = useCallback(async () => {
     if (!backendDisconnected) {
-      return BackendREST.updateStats(backendUrl).then((val) => {
-        if (Array.isArray(val)) {
-          setCfList(crazyflieDtoArrToCfList(val));
-        }
-      });
+      return BackendREST.updateStats(backendUrl).then(updateCfList);
     }
-  }, [backendUrl, backendDisconnected, setCfList]);
+  }, [backendUrl, backendDisconnected, updateCfList]);
 
   const reset = useCallback(
     async (simulation: boolean) => {

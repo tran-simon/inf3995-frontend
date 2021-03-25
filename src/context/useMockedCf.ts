@@ -44,15 +44,9 @@ const useMockedCf = (cfList: KeyArray<Crazyflie>) => {
     ...cfList,
   };
 
-  const mockCfList = useRef<CrazyflieDTO[]>(
-    Object.keys(initialMockData).map((key, i) => ({
-      ...initialMockData[key],
-      data: initialMockData[key].data,
-      droneId: key,
-    })),
-  );
+  const mockCfList = useRef<KeyArray<Crazyflie>>(initialMockData);
 
-  const moveCfBy = (cf: CrazyflieDTO, delta: Point, sensors: Sensors) => {
+  const moveCfBy = (cf: Crazyflie, delta: Point, sensors: Sensors) => {
     if (cf.data?.length) {
       const { x, y } = cf.data[cf.data.length - 1];
       cf.data.push({
@@ -64,7 +58,11 @@ const useMockedCf = (cfList: KeyArray<Crazyflie>) => {
   };
 
   const updateCf = useCallback(
-    (cf: CrazyflieDTO, index: number) => {
+    (cf?: Crazyflie, index?: number) => {
+      if (cf == null || index == null) {
+        return;
+      }
+
       cf.battery = (cf.battery || 100) - 0.001;
       if (!started.current) {
         cf.state = State.standby;
@@ -140,8 +138,22 @@ const useMockedCf = (cfList: KeyArray<Crazyflie>) => {
   );
 
   const mockUpdateStats = useCallback(() => {
-    mockCfList.current.forEach(updateCf);
-    return JSON.stringify(mockCfList.current);
+    Object.values(mockCfList.current).forEach(updateCf);
+
+    const cfsDto: CrazyflieDTO[] = Object.keys(mockCfList.current).map(
+      (droneId) => {
+        const cf = mockCfList.current[droneId] as Crazyflie;
+        return {
+          droneId,
+          state: cf.state,
+          speed: cf.speed,
+          battery: cf.battery,
+          cfData: cf.data[cf.data.length - 1],
+        };
+      },
+    );
+
+    return JSON.stringify(cfsDto);
   }, [mockCfList.current, updateCf]);
 
   useEffect(() => {

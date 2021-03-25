@@ -9,8 +9,12 @@ export default interface Crazyflie {
   data: CFData[];
 }
 
-export interface CrazyflieDTO extends Partial<Crazyflie> {
-  droneId: string;
+export interface CrazyflieDTO {
+  droneId?: string;
+  battery?: number;
+  speed?: number;
+  state?: StateType;
+  cfData?: CFData;
 }
 
 export interface CFData extends Point, Sensors {}

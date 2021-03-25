@@ -52,7 +52,7 @@ const MapViewport = React.forwardRef<
     };
 
     const cf = cfList[droneId];
-    if (!cf.data.length) {
+    if (!cf?.data.length) {
       return;
     }
 

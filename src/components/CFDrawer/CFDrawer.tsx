@@ -28,6 +28,9 @@ export const CFDrawer = ({ children, ...props }: DrawerProps) => {
         <List>
           {Object.keys(cfList).map((droneId, i) => {
             const crazyflie = cfList[droneId];
+            if (!crazyflie) {
+              return null;
+            }
             const batteryPer = crazyflie.battery ?? 0;
             let stateIcon: ReactElement | null = null;
             switch (crazyflie.state) {
