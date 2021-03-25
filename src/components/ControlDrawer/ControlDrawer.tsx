@@ -11,9 +11,20 @@ import { MOCK_BACKEND_URL } from '../../context/useMockedCf';
 
 const ControlDrawer = (props: GridProps) => {
   const theme = useTheme();
-  const { cfList, takeoff, land, setBackendUrl, backendUrl } = useContext(
-    CFContext,
-  );
+  const {
+    cfList,
+    takeoff,
+    land,
+    setBackendUrl,
+    backendUrl,
+    backendDisconnected,
+  } = useContext(CFContext);
+
+  const crazyflies = Object.values(cfList);
+  const disabled =
+    !!crazyflies.find((cf) => !cf?.initialPosition) ||
+    backendDisconnected ||
+    !crazyflies.length;
 
   return (
     <Grid
@@ -29,15 +40,19 @@ const ControlDrawer = (props: GridProps) => {
     >
       <Grid item xs={12}>
         <Typography component="h2">
-          Nombre de drones: {cfList.length}
+          Nombre de drones: {crazyflies.length}
         </Typography>
       </Grid>
 
       <Grid item>
-        <Button onClick={takeoff}>Décoller</Button>
+        <Button disabled={disabled} onClick={takeoff}>
+          Décoller
+        </Button>
       </Grid>
       <Grid item>
-        <Button onClick={land}>Atterrir</Button>
+        <Button disabled={disabled} onClick={land}>
+          Atterrir
+        </Button>
       </Grid>
       <Grid item>
         <Button

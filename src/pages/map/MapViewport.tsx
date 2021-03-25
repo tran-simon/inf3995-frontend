@@ -3,6 +3,7 @@ import React, { ReactNode, SVGProps, useContext } from 'react';
 import CFContext from '../../context/CFContext';
 import { getWalls, State } from '../../model/Crazyflie';
 import Wall from '../../model/Wall';
+import { Point } from '../../utils';
 
 const MapViewport = React.forwardRef<
   SVGSVGElement,
@@ -52,12 +53,17 @@ const MapViewport = React.forwardRef<
     };
 
     const cf = cfList[droneId];
-    if (!cf?.data.length) {
-      return;
-    }
 
-    const { x, y } = cf.data[cf.data.length - 1];
-    if (cf.data) {
+    const initialPosition = cf?.initialPosition;
+
+    if (cf && initialPosition) {
+      const relativePosition = cf.data.length
+        ? cf.data[cf.data.length - 1]
+        : undefined;
+      const { x, y } = relativePosition
+        ? Point.addPoint(relativePosition, initialPosition)
+        : initialPosition;
+
       cfsSvg.push(
         <circle
           key={droneId}
@@ -70,8 +76,8 @@ const MapViewport = React.forwardRef<
           <title>{droneId}</title>
         </circle>,
       );
+      addWalls(getWalls(cf));
     }
-    addWalls(getWalls(cf));
   });
 
   return (

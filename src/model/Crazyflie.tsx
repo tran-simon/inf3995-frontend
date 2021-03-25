@@ -7,6 +7,7 @@ export default interface Crazyflie {
   speed?: number;
   state?: StateType;
   data: CFData[];
+  initialPosition?: Point;
 }
 
 export interface CrazyflieDTO {
@@ -15,6 +16,8 @@ export interface CrazyflieDTO {
   speed?: number;
   state?: StateType;
   cfData?: CFData;
+
+  initialPosition?: Point;
 }
 
 export interface CFData extends Point, Sensors {}
@@ -37,52 +40,57 @@ export const State = {
 
 export const getWalls = (crazyflie: Crazyflie): Wall[] => {
   const res: Wall[] = [];
+  const { initialPosition, data = [] } = crazyflie;
 
-  (crazyflie.data || []).forEach((data) => {
-    const { east, north, south, west, x, y } = data;
-    for (let i = 0; i < 4; i++) {
-      let v: number | undefined;
+  initialPosition &&
+    data.forEach((data) => {
+      const { east, north, south, west, x, y } = data;
+      for (let i = 0; i < 4; i++) {
+        let v: number | undefined;
 
-      let xScale = 1,
-        yScale = 1;
-      switch (i) {
-        case 0:
-          xScale = 0;
-          v = north;
-          break;
-        case 1:
-          yScale = -1;
-          xScale = 0;
-          v = south;
-          break;
-        case 2:
-          yScale = 0;
-          v = east;
-          break;
-        case 3:
-          xScale = -1;
-          yScale = 0;
-          v = west;
-          break;
-        default:
-          break;
+        let xScale = 1,
+          yScale = 1;
+        switch (i) {
+          case 0:
+            xScale = 0;
+            v = north;
+            break;
+          case 1:
+            yScale = -1;
+            xScale = 0;
+            v = south;
+            break;
+          case 2:
+            yScale = 0;
+            v = east;
+            break;
+          case 3:
+            xScale = -1;
+            yScale = 0;
+            v = west;
+            break;
+          default:
+            break;
+        }
+
+        const notDetected = v == null || v >= SENSOR_MAX_RANGE;
+        if (notDetected) {
+          v = SENSOR_MAX_RANGE;
+        }
+
+        res.push({
+          cfData: {
+            ...data,
+            ...addPoint(data, initialPosition),
+          },
+          position: addPoint(
+            addPoint({ x, y }, initialPosition),
+            scalePoint(newPoint(xScale, yScale), v ?? SENSOR_MAX_RANGE),
+          ),
+          outOfRange: notDetected,
+        });
       }
-
-      const notDetected = v == null || v >= SENSOR_MAX_RANGE;
-      if (notDetected) {
-        v = SENSOR_MAX_RANGE;
-      }
-
-      res.push({
-        cfData: data,
-        position: addPoint(
-          { x, y },
-          scalePoint(newPoint(xScale, yScale), v ?? SENSOR_MAX_RANGE),
-        ),
-        outOfRange: notDetected,
-      });
-    }
-  });
+    });
 
   return res;
 };

@@ -1,11 +1,6 @@
 /* eslint-disable */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Crazyflie, {
-  CFData,
-  CrazyflieDTO,
-  Sensors,
-  State,
-} from '../model/Crazyflie';
+import Crazyflie, { CrazyflieDTO, Sensors, State } from '../model/Crazyflie';
 import Point from '../utils/Point';
 import { KeyArray } from '../utils';
 
@@ -16,39 +11,28 @@ const useMockedCf = (cfList: KeyArray<Crazyflie>) => {
   const [mockCf, setMockCf] = useState<boolean>(false);
   const started = useRef(false);
 
-  const initialMockData: KeyArray<Crazyflie> = {
-    MOCKED_0: {
-      data: [
-        {
-          x: 0,
-          y: 50,
-        },
-      ],
-    },
-    MOCKED_1: {
-      data: [
-        {
-          x: 50,
-          y: 0,
-        },
-      ],
-    },
-    MOCKED_2: {
-      data: [
-        {
-          x: -20,
-          y: 30,
-        },
-      ],
-    },
+  const mockCfList = useRef<KeyArray<Crazyflie>>({
+    MOCKED_0: { data: [] },
+    MOCKED_1: { data: [] },
+    MOCKED_2: { data: [] },
     ...cfList,
-  };
+  });
 
-  const mockCfList = useRef<KeyArray<Crazyflie>>(initialMockData);
+  useEffect(() => {
+    mockCfList.current = {
+      MOCKED_0: { data: [] },
+      MOCKED_1: { data: [] },
+      MOCKED_2: { data: [] },
+      ...mockCfList.current,
+      ...cfList,
+    };
+  }, [cfList]);
 
   const moveCfBy = (cf: Crazyflie, delta: Point, sensors: Sensors) => {
-    if (cf.data?.length) {
-      const { x, y } = cf.data[cf.data.length - 1];
+    const { x, y } = cf.data?.length
+      ? cf.data[cf.data.length - 1]
+      : cf.initialPosition || {};
+    if (x != null && y != null) {
       cf.data.push({
         x: x + delta.x,
         y: y + delta.y,
@@ -71,9 +55,12 @@ const useMockedCf = (cfList: KeyArray<Crazyflie>) => {
 
       cf.state = State.inMission;
 
-      const { x = 0, y = 0 } = cf.data?.length
+      const { x, y } = cf.data?.length
         ? cf.data[cf.data.length - 1]
-        : {};
+        : cf.initialPosition || {};
+      if (x == null || y == null) {
+        return;
+      }
       switch (index) {
         case 0:
           if (x < 5) {

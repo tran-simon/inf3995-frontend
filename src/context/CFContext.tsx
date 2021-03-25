@@ -18,6 +18,7 @@ const BACKEND_URL =
   process.env.REACT_APP_BACKEND_URL ?? 'http://localhost:5000';
 
 interface ICFContext extends MapData {
+  setCfList: SetState<KeyArray<Crazyflie>>;
   _key: string;
   scan: () => Promise<Response | void>;
   updateStats: () => Promise<Response | void>;
@@ -37,6 +38,7 @@ interface ICFContext extends MapData {
 }
 
 const DefaultCfContext: ICFContext = {
+  setCfList: noop,
   _key: '',
   date: Date.now(),
   cfList: {},
@@ -223,6 +225,7 @@ export const CFProvider = ({
         refreshRate,
         setRefreshRate,
         cfList,
+        setCfList,
         takeoff,
         land,
         simulation,

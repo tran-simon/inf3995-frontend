@@ -41,10 +41,29 @@ export default class MapData {
    * @param mapData
    */
   static fromDto(mapData: MapDataDTO): MapData {
+    /* Add the required values (data) to all the cfs in the list */
+    const cfList = !mapData.cfList
+      ? {}
+      : Object.keys(mapData.cfList).reduce(
+          (cfList, key): KeyArray<Crazyflie> => {
+            const cf = mapData.cfList && mapData.cfList[key];
+            return !cf
+              ? cfList
+              : {
+                  ...cfList,
+                  [key]: {
+                    ...cf,
+                    data: cf.data ?? [],
+                  },
+                };
+          },
+          {},
+        );
+
     return new MapData({
       date: Date.now(),
-      cfList: {},
       ...mapData,
+      cfList,
     });
   }
 
@@ -53,7 +72,33 @@ export default class MapData {
    * @param mapData
    */
   static toDto(mapData: MapData): MapDataDTO {
-    return _.omitBy(mapData, _.isUndefined);
+    /* Removed undefined values from objects in cfList */
+    const cfList = Object.keys(mapData.cfList).reduce(
+      (cfList, key): KeyArray<Crazyflie> => {
+        const cf = mapData.cfList[key];
+        return !cf
+          ? cfList
+          : {
+              ...cfList,
+              [key]: _.omitBy(
+                {
+                  ...cf,
+                  data: cf.data.map((data) => _.omitBy(data, _.isUndefined)),
+                },
+                _.isUndefined,
+              ),
+            };
+      },
+      {},
+    );
+
+    return _.omitBy<MapData>(
+      {
+        ...mapData,
+        cfList,
+      },
+      _.isUndefined,
+    );
   }
 }
 
