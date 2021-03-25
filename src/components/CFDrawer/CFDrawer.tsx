@@ -124,11 +124,7 @@ export const CFDrawer = ({ children, ...props }: DrawerProps) => {
         </List>
       </Box>
       {openCfId && (
-        <CFDialog
-          droneId={openCfId}
-          close={() => setOpenCfId(null)}
-          save={(cf) => {}}
-        />
+        <CFDialog droneId={openCfId} close={() => setOpenCfId(null)} />
       )}
       <Controls />
     </Drawer>
@@ -141,7 +137,6 @@ const CFDialog = ({
 }: {
   droneId: string;
   close: () => void;
-  save: (crazyflie: Crazyflie) => void;
 }) => {
   const { cfList, setCfList } = useContext(CFContext);
   const crazyflie = cfList[droneId];

@@ -12,11 +12,19 @@ describe('MapViewport', () => {
         y: 10,
       },
     ],
+    initialPosition: {
+      x: 10,
+      y: -50,
+    },
 
     state: State.inMission,
   };
   const cf1 = {
     droneId: 'cf_1',
+    initialPosition: {
+      x: 0,
+      y: 0,
+    },
     data: [
       {
         x: 20,

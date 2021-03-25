@@ -296,14 +296,15 @@ exports[`layout can match snapshot 1`] = `
           className="MuiTypography-root MuiTypography-body1"
         >
           Nombre de drones: 
+          0
         </h2>
       </div>
       <div
         className="MuiGrid-root MuiGrid-item"
       >
         <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-text"
-          disabled={false}
+          className="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
+          disabled={true}
           onBlur={[Function]}
           onClick={[Function]}
           onDragLeave={[Function]}
@@ -316,7 +317,7 @@ exports[`layout can match snapshot 1`] = `
           onTouchEnd={[Function]}
           onTouchMove={[Function]}
           onTouchStart={[Function]}
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <span
@@ -330,8 +331,8 @@ exports[`layout can match snapshot 1`] = `
         className="MuiGrid-root MuiGrid-item"
       >
         <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-text"
-          disabled={false}
+          className="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
+          disabled={true}
           onBlur={[Function]}
           onClick={[Function]}
           onDragLeave={[Function]}
@@ -344,7 +345,7 @@ exports[`layout can match snapshot 1`] = `
           onTouchEnd={[Function]}
           onTouchMove={[Function]}
           onTouchStart={[Function]}
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <span

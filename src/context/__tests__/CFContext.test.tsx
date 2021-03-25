@@ -5,6 +5,10 @@ import Wall from '../../model/Wall';
 describe('CFContext', () => {
   it('can get walls', () => {
     const cf: Crazyflie = {
+      initialPosition: {
+        x: 0,
+        y: 0,
+      },
       data: [
         {
           x: 10,
