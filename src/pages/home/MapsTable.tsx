@@ -21,17 +21,22 @@ import {
   FirebaseDatabaseMutation,
   FirebaseDatabaseNode,
 } from '@react-firebase/database';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ObjectWithKey } from '../../model';
 import { useHistory } from 'react-router-dom';
 
 interface MapsTableProps extends TableProps {
-  mapsData: ObjectWithKey<MapData>[];
+  mapsData?: ObjectWithKey<MapData>[];
 }
 
-const MapsTable = ({ mapsData, ...props }: MapsTableProps) => {
+const MapsTable = ({ mapsData: _mapsData, ...props }: MapsTableProps) => {
   const [deleteMapKey, setDeleteMapKey] = useState<string | null>(null);
+  const [mapsData, setMapsData] = useState(_mapsData);
   const history = useHistory();
+
+  useEffect(() => {
+    setMapsData(_mapsData);
+  }, [setMapsData, _mapsData]);
 
   return (
     <>
@@ -39,35 +44,42 @@ const MapsTable = ({ mapsData, ...props }: MapsTableProps) => {
         <TableHead>
           <TableRow>
             <TableCell>Indice</TableCell>
+            <TableCell>Nom</TableCell>
             <TableCell>Date de dernière modification</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {mapsData.map((map, i) => (
-            <TableRow
-              key={i}
-              hover
-              onClick={() => {
-                history.push(`/explore/${map._key}`);
-              }}
-            >
-              <TableCell>{i}</TableCell>
-              <TableCell>
-                {isValid(map.date) &&
-                  format(map.date, 'PPPP', { locale: frCA })}
-              </TableCell>
-              <TableCell>
-                <IconButton
+          {mapsData &&
+            mapsData
+              .sort((data1, data2) => data2.date - data1.date)
+              .map((map, i) => (
+                <TableRow
+                  key={i}
+                  hover
                   onClick={() => {
-                    setDeleteMapKey(map._key);
+                    history.push(`/explore/${map._key}`);
                   }}
+                  style={{ cursor: 'pointer' }}
                 >
-                  <DeleteOutlineIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
+                  <TableCell>{i}</TableCell>
+                  <TableCell>{map.name}</TableCell>
+                  <TableCell>
+                    {isValid(map.date) &&
+                      format(map.date, 'PPPPpp', { locale: frCA })}
+                  </TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={(e) => {
+                        setDeleteMapKey(map._key);
+                        e.stopPropagation();
+                      }}
+                    >
+                      <DeleteOutlineIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
         </TableBody>
       </Table>
       <Dialog open={!!deleteMapKey} onClose={() => setDeleteMapKey(null)}>
@@ -86,6 +98,11 @@ const MapsTable = ({ mapsData, ...props }: MapsTableProps) => {
                   <Button
                     onClick={() => {
                       runMutation(null).then(() => {
+                        setMapsData(
+                          (mapsData ?? []).filter(
+                            (data) => data._key !== deleteMapKey,
+                          ),
+                        );
                         setDeleteMapKey(null);
                       });
                     }}
@@ -113,12 +130,12 @@ export default () => {
   return (
     <FirebaseDatabaseNode path={'/maps'} orderByChild="date">
       {(res) => {
-        const mapsData: ObjectWithKey<MapData>[] =
+        const mapsData: ObjectWithKey<MapData>[] | undefined =
           (res.isLoading != null &&
             !res.isLoading &&
             res.value &&
             resValueToMapsData(res.value)) ||
-          [];
+          undefined;
 
         return <MapsTable mapsData={mapsData} />;
       }}

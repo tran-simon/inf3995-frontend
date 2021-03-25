@@ -1,7 +1,6 @@
 import React from 'react';
 import Layout from '../Layout';
 import { create } from 'react-test-renderer';
-import * as ReactRouter from 'react-router-dom';
 
 jest.mock('react-router-dom', () => ({
   useParams: () => ({

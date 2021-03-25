@@ -51,8 +51,6 @@ export const Controls = () => {
     setBackendUrl,
     setRefreshRate,
     refreshRate,
-    simulation,
-    reset,
   } = useContext(CFContext);
 
   return (
@@ -70,13 +68,6 @@ export const Controls = () => {
         }
       >
         Rafraîchissement Automatique
-      </ControlSection>
-
-      <ControlSection
-        icon={simulation ? <ToggleOnOutlinedIcon /> : <ToggleOffOutlinedIcon />}
-        onClick={() => reset(!simulation)}
-      >
-        Mode Simulation
       </ControlSection>
 
       <Divider />

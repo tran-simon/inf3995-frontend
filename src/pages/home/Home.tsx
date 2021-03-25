@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button,
+  ButtonProps,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  List,
+  ListItem,
   Paper,
+  Switch,
   TableContainer,
+  TextField,
   Typography,
   useTheme,
 } from '@material-ui/core';
@@ -11,6 +21,7 @@ import { FirebaseDatabaseMutation } from '@react-firebase/database';
 import MapData from '../../model/MapData';
 import MapsTable from './MapsTable';
 import { useHistory } from 'react-router-dom';
+import { RunMutation } from '@react-firebase/database/dist/components/FirebaseDatabaseMutation';
 
 /**
  * Home page
@@ -20,7 +31,6 @@ import { useHistory } from 'react-router-dom';
  */
 const Home = () => {
   const theme = useTheme();
-  const history = useHistory();
 
   return (
     <>
@@ -64,23 +74,90 @@ const Home = () => {
           >
             <MapsTable />
           </TableContainer>
-          <FirebaseDatabaseMutation path={'/maps'} type={'push'}>
+
+          <FirebaseDatabaseMutation path={`/maps`} type={'push'}>
             {({ runMutation }) => (
-              <Button
+              <NewExplorationBtn
+                runMutation={runMutation}
                 variant="contained"
                 style={{ width: '100%', margin: '1rem 0' }}
-                onClick={() => {
-                  runMutation(new MapData()).then((v) => {
-                    v.key && history.push(`/explore/${v.key}`);
-                  });
-                }}
-              >
-                Nouvelle Exploration...
-              </Button>
+              />
             )}
           </FirebaseDatabaseMutation>
         </Container>
       </main>
+    </>
+  );
+};
+
+const NewExplorationBtn = ({
+  runMutation,
+  ...props
+}: ButtonProps & {
+  runMutation: RunMutation;
+}) => {
+  const history = useHistory();
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState(MapData.create);
+
+  return (
+    <>
+      <Button
+        onClick={() => {
+          setOpen(true);
+        }}
+        {...props}
+      >
+        Nouvelle Exploration...
+      </Button>
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>Nouvelle Exploration</DialogTitle>
+        <DialogContent>
+          <List>
+            <ListItem>
+              <TextField
+                label="Nom"
+                value={data.name ?? ''}
+                onChange={(e) =>
+                  setData({
+                    ...data,
+                    name: e.target.value,
+                  })
+                }
+                autoFocus
+              />
+            </ListItem>
+
+            <ListItem>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={!!data.simulation}
+                    onChange={(e) => {
+                      setData({ ...data, simulation: e.target.checked });
+                    }}
+                    color="primary"
+                  />
+                }
+                label="Simulation"
+              />
+            </ListItem>
+          </List>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Annuler</Button>
+          <Button
+            onClick={() => {
+              runMutation(MapData.toDto(data)).then((v) => {
+                setOpen(false);
+                v.key && history.push(`/explore/${v.key}`);
+              });
+            }}
+          >
+            Confirmer
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

@@ -5,23 +5,20 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import Crazyflie from '../model/Crazyflie';
+import Crazyflie, { CrazyflieDTO } from '../model/Crazyflie';
 import { noop } from 'lodash';
-import { SetState } from '../utils';
+import { KeyArray, SetState } from '../utils';
 import { BackendREST } from '../backendApi/BackendREST';
 import useMockedCf, { MOCK_BACKEND_URL } from './useMockedCf';
-import Wall from '../model/Wall';
-import { SENSOR_MAX_RANGE } from '../utils/constants';
-import { addPoint, newPoint, scalePoint } from '../utils/Point';
+import MapData from '../model/MapData';
+import firebase from 'firebase/app';
+import 'firebase/database';
 
 const BACKEND_URL =
   process.env.REACT_APP_BACKEND_URL ?? 'http://localhost:5000';
 
-interface ICFContext {
-  cfList: Crazyflie[];
-  walls: Wall[];
-  simulation?: boolean;
-
+interface ICFContext extends MapData {
+  _key: string;
   scan: () => Promise<Response | void>;
   updateStats: () => Promise<Response | void>;
 
@@ -36,12 +33,13 @@ interface ICFContext {
   land: () => Promise<Response | void>;
   takeoff: () => Promise<Response | void>;
 
-  reset: (simulation: boolean) => Promise<Response | void>;
+  save: () => Promise<void>;
 }
 
 const DefaultCfContext: ICFContext = {
-  cfList: [],
-  walls: [],
+  _key: '',
+  date: Date.now(),
+  cfList: {},
   simulation: false,
   scan: async () => {},
   updateStats: async () => {},
@@ -51,62 +49,25 @@ const DefaultCfContext: ICFContext = {
 
   land: async () => {},
   takeoff: async () => {},
-  reset: async () => {},
+
+  save: async () => {},
 };
 
 const CFContext = createContext<ICFContext>(DefaultCfContext);
 
-export const getWalls = (crazyflie: Crazyflie): Wall[] => {
-  const res: Wall[] = [];
-  const sensors = crazyflie.sensors ?? {};
-  const cfPos = crazyflie.position;
-
-  for (let i = 0; i < 4; i++) {
-    let v: number | undefined;
-
-    let xScale = 1,
-      yScale = 1;
-    switch (i) {
-      case 0:
-        xScale = 0;
-        v = sensors.north;
-        break;
-      case 1:
-        yScale = -1;
-        xScale = 0;
-        v = sensors.south;
-        break;
-      case 2:
-        yScale = 0;
-        v = sensors.east;
-        break;
-      case 3:
-        xScale = -1;
-        yScale = 0;
-        v = sensors.west;
-        break;
-      default:
-        break;
+const crazyflieDtoArrToCfList = (crazyflieDtoArr: CrazyflieDTO[]) => {
+  const cfList: KeyArray<Crazyflie> = {};
+  crazyflieDtoArr.forEach((v) => {
+    const { droneId, ...cf } = v;
+    if (droneId) {
+      cfList[droneId] = {
+        ...cf,
+        data: cf.data ?? [],
+      };
     }
+  });
 
-    const notDetected = v == null || v >= SENSOR_MAX_RANGE;
-    if (notDetected) {
-      v = SENSOR_MAX_RANGE;
-    }
-
-    if (cfPos) {
-      res.push({
-        crazyflie,
-        position: addPoint(
-          cfPos,
-          scalePoint(newPoint(xScale, yScale), v ?? SENSOR_MAX_RANGE),
-        ),
-        outOfRange: notDetected,
-      });
-    }
-  }
-
-  return res;
+  return cfList;
 };
 
 export const CFProvider = ({
@@ -114,6 +75,8 @@ export const CFProvider = ({
   ...props
 }: Partial<ICFContext> & {
   children: ReactNode;
+  _key: string;
+  date: number;
 }) => {
   const [refreshRate, setRefreshRate] = useState<number>(
     props.refreshRate ?? 0,
@@ -122,52 +85,89 @@ export const CFProvider = ({
     props.backendUrl ?? BACKEND_URL,
   );
   const [backendDisconnected, setBackendDisconnected] = useState(true);
-  const [cfList, setCfList] = useState<Crazyflie[]>(props.cfList || []);
+  const [cfList, setCfList] = useState<KeyArray<Crazyflie>>(props.cfList || {});
 
-  const [walls, setWalls] = useState<Wall[]>(props.walls || []);
+  const [simulation, setSimulation] = useState<boolean>(
+    props.simulation ?? false,
+  );
+  const [backendSim, setBackendSim] = useState<boolean | undefined>();
 
-  const [simulation, setSimulation] = useState(false);
-
-  const { setMockCf } = useMockedCf();
-
-  useEffect(() => {
-    if (backendUrl === MOCK_BACKEND_URL) {
-      setMockCf(true);
-    }
-  }, [setMockCf, backendUrl]);
+  const { setMockCf } = useMockedCf(cfList);
 
   const scan = useCallback(async () => {
     if (!backendDisconnected) {
       return BackendREST.scan(backendUrl).then((value) => {
         if (Array.isArray(value)) {
-          setCfList(value);
+          setCfList(crazyflieDtoArrToCfList(value));
         }
       });
     }
-  }, [backendUrl, backendDisconnected]);
+  }, [backendUrl, backendDisconnected, setCfList]);
 
   const updateStats = useCallback(async () => {
     if (!backendDisconnected) {
       return BackendREST.updateStats(backendUrl).then((val) => {
         if (Array.isArray(val)) {
-          setCfList(val);
-          const newWalls = val.flatMap((cf: Crazyflie) => getWalls(cf));
-          setWalls([...walls, ...newWalls]);
+          setCfList(crazyflieDtoArrToCfList(val));
         }
       });
     }
-  }, [backendUrl, backendDisconnected, walls, setWalls]);
+  }, [backendUrl, backendDisconnected, setCfList]);
+
+  const reset = useCallback(
+    async (simulation: boolean) => {
+      if (!backendDisconnected) {
+        return BackendREST.reset(backendUrl, simulation).then((res) => {
+          if (res.ok) {
+            setCfList({});
+            res.json().then((a) => {
+              setSimulation(a);
+            });
+          } else {
+            if (simulation) {
+              alert(
+                "Erreur: Le backend n'a pas réussi à se connecter à la simulation",
+              );
+            } else {
+              alert("Une erreur s'est produite");
+            }
+          }
+        });
+      }
+    },
+    [setCfList, setSimulation, backendDisconnected, backendUrl],
+  );
 
   useEffect(() => {
-    BackendREST.liveCheck(backendUrl)
-      .then((response) => {
-        setBackendDisconnected(!response.ok);
-      })
-      .catch(() => {
-        //todo: uncomment after cdr
-        // setBackendDisconnected(true);
-      });
-  }, [backendUrl, setBackendDisconnected]);
+    if (backendUrl === MOCK_BACKEND_URL) {
+      setMockCf(true);
+      setBackendDisconnected(false);
+    } else {
+      BackendREST.liveCheck(backendUrl)
+        .then((response) => {
+          setBackendDisconnected(!response.ok);
+          response.json().then((v) => {
+            if (v.simulation != null) {
+              setBackendSim(v.simulation);
+            }
+          });
+        })
+        .catch(() => {
+          //todo: uncomment after cdr
+          // setBackendDisconnected(true);
+        });
+    }
+  }, [backendUrl, setBackendDisconnected, setMockCf]);
+
+  useEffect(() => {
+    if (
+      !backendDisconnected &&
+      backendSim != null &&
+      backendSim !== simulation
+    ) {
+      reset(simulation);
+    }
+  }, [backendDisconnected, backendSim, simulation, reset, backendUrl]);
 
   useEffect(() => {
     if (!backendDisconnected && !!refreshRate) {
@@ -189,19 +189,21 @@ export const CFProvider = ({
     }
   };
 
-  const reset = async (simulation: boolean) => {
-    if (!backendDisconnected) {
-      return BackendREST.reset(backendUrl, simulation).then((res) => {
-        if (res.ok) {
-          setCfList([]);
-          setWalls([]);
-          res.json().then((a) => {
-            setSimulation(a);
-          });
-        }
-      });
+  const save = useCallback(async () => {
+    if (props._key) {
+      const { name } = props;
+      const data: MapData = {
+        cfList,
+        name,
+        date: Date.now(),
+        simulation,
+      };
+      return firebase
+        .database()
+        .ref(`/maps/${props._key}`)
+        .update(MapData.toDto(data));
     }
-  };
+  }, [props, cfList, simulation]);
 
   return (
     <CFContext.Provider
@@ -217,9 +219,8 @@ export const CFProvider = ({
         cfList,
         takeoff,
         land,
-        walls,
-        reset,
         simulation,
+        save,
       }}
     >
       {children}

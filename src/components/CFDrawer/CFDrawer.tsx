@@ -26,7 +26,8 @@ export const CFDrawer = ({ children, ...props }: DrawerProps) => {
       {children}
       <Box flexGrow={1}>
         <List>
-          {cfList.map((crazyflie, i) => {
+          {Object.keys(cfList).map((droneId, i) => {
+            const crazyflie = cfList[droneId];
             const batteryPer = crazyflie.battery ?? 0;
             let stateIcon: ReactElement | null = null;
             switch (crazyflie.state) {
@@ -57,7 +58,7 @@ export const CFDrawer = ({ children, ...props }: DrawerProps) => {
                 <ListItemText
                   secondary={`Vitesse: ${crazyflie.speed?.toFixed(2) || ''}`}
                 >
-                  {crazyflie.droneId}
+                  {droneId}
                 </ListItemText>
                 {stateIcon && (
                   <ListItemIcon style={{ justifyContent: 'flex-end' }}>

@@ -1,9 +1,9 @@
-import Crazyflie from './Crazyflie';
+import Crazyflie, { CFData } from './Crazyflie';
 import Point from '../utils/Point';
 
 export default interface Wall {
   position: Point;
-  crazyflie: Crazyflie;
+  cfData: CFData;
 
   /**
    * If the sensors hasn't detected any wall

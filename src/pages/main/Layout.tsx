@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -12,6 +12,7 @@ import {
   Divider,
   IconButton,
   makeStyles,
+  TextField,
   Toolbar,
   Typography,
 } from '@material-ui/core';
@@ -21,7 +22,10 @@ import clsx from 'clsx';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import SaveIcon from '@material-ui/icons/Save';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import CFContext from '../../context/CFContext';
+import { FirebaseDatabaseMutation } from '@react-firebase/database';
+import EditIcon from '@material-ui/icons/Edit';
 
 const drawerWidth = 240;
 
@@ -71,12 +75,66 @@ const useStyles = makeStyles((theme) => {
   });
 });
 
+const Name = ({
+  onChange = () => {},
+}: {
+  onChange?: (value: string) => void;
+}) => {
+  const { name = '' } = useContext(CFContext);
+  const [value, setValue] = useState(name);
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Typography>{value}</Typography>
+      <IconButton
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        <EditIcon />
+      </IconButton>
+      <>
+        <Dialog open={open} onClose={() => setOpen(false)}>
+          <DialogTitle>Renommer</DialogTitle>
+          <DialogContent>
+            <TextField
+              value={value}
+              onChange={(event) => {
+                setValue(event.target.value);
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setValue(name);
+                setOpen(false);
+              }}
+            >
+              Annuler
+            </Button>
+            <Button
+              onClick={() => {
+                setOpen(false);
+                onChange(value);
+              }}
+            >
+              Confirmer
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </>
+    </>
+  );
+};
+
 const Layout = ({ children }: { children: ReactNode }) => {
   const [open, setOpen] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { mapId } = useParams<any>();
   const history = useHistory();
   const classes = useStyles();
+  const { _key, save, simulation } = useContext(CFContext);
 
   return (
     <Box display="flex" height="100vh">
@@ -91,9 +149,24 @@ const Layout = ({ children }: { children: ReactNode }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography>Centre de contrôle des Crazyflies: {mapId}</Typography>
+          {!!_key && (
+            <FirebaseDatabaseMutation path={`/maps/${_key}/name`} type={'set'}>
+              {({ runMutation }) => (
+                <Name onChange={(value) => runMutation(value)} />
+              )}
+            </FirebaseDatabaseMutation>
+          )}
 
-          <IconButton style={{ marginLeft: 'auto', marginRight: '1rem' }}>
+          {simulation && (
+            <Typography style={{ border: 'solid', padding: '0.5rem' }}>
+              Simulation
+            </Typography>
+          )}
+
+          <IconButton
+            style={{ marginLeft: 'auto', marginRight: '1rem' }}
+            onClick={() => save()}
+          >
             <SaveIcon />
           </IconButton>
 
@@ -147,9 +220,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <Button onClick={() => setOpenConfirm(false)}>Annuler</Button>
           <Button
             onClick={() => {
-              //todo  save
               setOpenConfirm(false);
-              history.push('/');
+              save().then(() => {
+                history.push('/');
+              });
             }}
           >
             Sauvegarder et Quitter

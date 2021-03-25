@@ -9,7 +9,12 @@ jest.mock('../../../backendApi/BackendREST');
 
 describe('Controls', () => {
   const ControlComp = (
-    <CFProvider refreshRate={0} backendDisconnected={false}>
+    <CFProvider
+      date={Date.now()}
+      _key=""
+      refreshRate={0}
+      backendDisconnected={false}
+    >
       <Controls />
     </CFProvider>
   );
