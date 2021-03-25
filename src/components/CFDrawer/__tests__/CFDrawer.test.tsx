@@ -7,18 +7,24 @@ import Crazyflie from '../../../model/Crazyflie';
 describe('CFDrawer', () => {
   const cf1: Crazyflie = {
     battery: 10,
-    droneId: 'cf1',
     state: 'In mission',
     speed: 1,
+    data: [],
   };
   const cf2: Crazyflie = {
     battery: 90,
-    droneId: 'cf2',
     state: 'Crashed',
+    data: [],
   };
 
   const DrawerComp = (
-    <CFProvider refreshRate={0} backendDisconnected={false} cfList={[cf1, cf2]}>
+    <CFProvider
+      date={Date.now()}
+      _key=""
+      refreshRate={0}
+      backendDisconnected={false}
+      cfList={{ cf1, cf2 }}
+    >
       <CFDrawer />
     </CFProvider>
   );

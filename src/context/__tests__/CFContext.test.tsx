@@ -1,20 +1,19 @@
-import { getWalls } from '../CFContext';
-import Crazyflie from '../../model/Crazyflie';
+import Crazyflie, { getWalls } from '../../model/Crazyflie';
 import { SENSOR_MAX_RANGE } from '../../utils/constants';
 import Wall from '../../model/Wall';
 
 describe('CFContext', () => {
   it('can get walls', () => {
     const cf: Crazyflie = {
-      position: {
-        x: 10,
-        y: 20,
-      },
-      sensors: {
-        north: 5,
-        east: 20,
-        south: -10,
-      },
+      data: [
+        {
+          x: 10,
+          y: 20,
+          north: 5,
+          east: 20,
+          south: -10,
+        },
+      ],
     };
 
     const walls = getWalls(cf);
@@ -25,7 +24,7 @@ describe('CFContext', () => {
           x: 10,
           y: 25,
         },
-        crazyflie: cf,
+        cfData: cf.data[cf.data.length - 1],
         outOfRange: false,
       },
       {
@@ -33,7 +32,7 @@ describe('CFContext', () => {
           x: 30,
           y: 20,
         },
-        crazyflie: cf,
+        cfData: cf.data[cf.data.length - 1],
         outOfRange: false,
       },
       {
@@ -41,7 +40,7 @@ describe('CFContext', () => {
           x: 10,
           y: 30,
         },
-        crazyflie: cf,
+        cfData: cf.data[cf.data.length - 1],
         outOfRange: false,
       },
       {
@@ -49,7 +48,7 @@ describe('CFContext', () => {
           x: 10 - SENSOR_MAX_RANGE,
           y: 20,
         },
-        crazyflie: cf,
+        cfData: cf.data[cf.data.length - 1],
         outOfRange: true,
       },
     ];

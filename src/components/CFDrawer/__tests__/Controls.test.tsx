@@ -9,7 +9,12 @@ jest.mock('../../../backendApi/BackendREST');
 
 describe('Controls', () => {
   const ControlComp = (
-    <CFProvider refreshRate={0} backendDisconnected={false}>
+    <CFProvider
+      date={Date.now()}
+      _key=""
+      refreshRate={0}
+      backendDisconnected={false}
+    >
       <Controls />
     </CFProvider>
   );
@@ -71,25 +76,5 @@ describe('Controls', () => {
     await waitFor(async () => {
       expect(BackendREST.updateStats).toHaveBeenCalled();
     });
-  });
-
-  it('can toggle simulation mode', async () => {
-    fireEvent.click(screen.getByText('Mode Simulation'));
-
-    await waitFor(() =>
-      expect(BackendREST.reset).toHaveBeenCalledWith(
-        'http://localhost:5000',
-        true,
-      ),
-    );
-
-    fireEvent.click(screen.getByText('Mode Simulation'));
-
-    await waitFor(() =>
-      expect(BackendREST.reset).toHaveBeenCalledWith(
-        'http://localhost:5000',
-        false,
-      ),
-    );
   });
 });

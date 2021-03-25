@@ -1,49 +1,77 @@
 import React, { ReactNode, SVGProps, useContext } from 'react';
 
 import CFContext from '../../context/CFContext';
-import { State } from '../../model/Crazyflie';
+import { getWalls, State } from '../../model/Crazyflie';
+import Wall from '../../model/Wall';
 
 const MapViewport = React.forwardRef<
   SVGSVGElement,
   Partial<SVGProps<SVGSVGElement>>
 >((props, ref) => {
-  const { cfList, walls } = useContext(CFContext);
+  const { cfList } = useContext(CFContext);
 
+  const cfsSvg: ReactNode[] = [];
   const linesSvg: ReactNode[] = [];
   const wallsSvg: ReactNode[] = [];
 
-  walls.forEach((wall, i) => {
-    const origin = wall.crazyflie.position;
-    const destination = wall.position;
+  Object.keys(cfList).map((droneId) => {
+    const addWalls = (walls: Wall[]) => {
+      walls.forEach((wall, i) => {
+        const origin = wall.cfData;
+        const destination = wall.position;
 
-    if (origin) {
-      linesSvg.push(
-        <line
-          key={`line_${i}`}
-          x1={origin.x}
-          x2={destination.x}
-          y1={origin.y}
-          y2={destination.y}
-          strokeWidth={3}
-          stroke={'white'}
-          strokeOpacity="0.8"
-          strokeLinecap="round"
-        />,
-      );
+        if (origin) {
+          linesSvg.push(
+            <line
+              key={`line_${i}_${droneId}`}
+              x1={origin.x}
+              x2={destination.x}
+              y1={origin.y}
+              y2={destination.y}
+              strokeWidth={3}
+              stroke={'white'}
+              strokeOpacity="0.8"
+              strokeLinecap="round"
+            />,
+          );
+        }
+        if (!wall.outOfRange) {
+          wallsSvg.push(
+            <rect
+              key={`wall_${i}_${droneId}`}
+              width="1"
+              height="1"
+              {...destination}
+              fill="red"
+            >
+              <title>Mur trouvé par le drone: {droneId}</title>
+            </rect>,
+          );
+        }
+      });
+    };
+
+    const cf = cfList[droneId];
+    if (!cf?.data.length) {
+      return;
     }
-    if (!wall.outOfRange) {
-      wallsSvg.push(
-        <rect
-          key={`wall_${i}`}
-          width="1"
-          height="1"
-          {...destination}
-          fill="red"
+
+    const { x, y } = cf.data[cf.data.length - 1];
+    if (cf.data) {
+      cfsSvg.push(
+        <circle
+          key={droneId}
+          r="1"
+          cx={x}
+          cy={y}
+          fill="blue"
+          stroke={cf.state === State.crashed ? 'red' : undefined}
         >
-          <title>Mur trouvé par le drone: {wall.crazyflie.droneId}</title>
-        </rect>,
+          <title>{droneId}</title>
+        </circle>,
       );
     }
+    addWalls(getWalls(cf));
   });
 
   return (
@@ -63,20 +91,7 @@ const MapViewport = React.forwardRef<
       {linesSvg}
       {wallsSvg}
 
-      {cfList.map((cf, i) =>
-        cf.position ? (
-          <circle
-            key={i}
-            r="1"
-            cx={cf.position?.x}
-            cy={cf.position?.y}
-            fill="blue"
-            stroke={cf.state === State.crashed ? 'red' : undefined}
-          >
-            <title>{cf.droneId}</title>
-          </circle>
-        ) : null,
-      )}
+      {cfsSvg}
     </svg>
   );
 });

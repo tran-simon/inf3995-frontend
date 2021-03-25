@@ -14,74 +14,71 @@ exports[`CFDrawer can match snapshot 1`] = `
         <ul
           class="MuiList-root MuiList-padding"
         >
-          <li
-            class="MuiListItem-container"
+          <div
+            aria-disabled="false"
+            class="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+            role="button"
+            tabindex="0"
           >
             <div
-              aria-disabled="false"
-              class="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button MuiListItem-secondaryAction"
-              role="button"
-              tabindex="0"
+              class="MuiListItemIcon-root"
+              style="width: 40px; min-width: unset; margin-right: 1rem;"
             >
-              <div
-                class="MuiListItemIcon-root"
-                style="width: 1rem; margin-right: 1rem;"
+              <svg
+                class="CircularProgressbar "
+                data-test-id="CircularProgressbar"
+                viewBox="0 0 100 100"
               >
-                <svg
-                  class="CircularProgressbar "
-                  data-test-id="CircularProgressbar"
-                  viewBox="0 0 100 100"
-                >
-                  <path
-                    class="CircularProgressbar-trail"
-                    d="
+                <path
+                  class="CircularProgressbar-trail"
+                  d="
       M 50,50
       m 0,-46
       a 46,46 0 1 1 0,92
       a 46,46 0 1 1 0,-92
     "
-                    fill-opacity="0"
-                    stroke-width="8"
-                    style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: 0px;"
-                  />
-                  <path
-                    class="CircularProgressbar-path"
-                    d="
+                  fill-opacity="0"
+                  stroke-width="8"
+                  style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: 0px;"
+                />
+                <path
+                  class="CircularProgressbar-path"
+                  d="
       M 50,50
       m 0,-46
       a 46,46 0 1 1 0,92
       a 46,46 0 1 1 0,-92
     "
-                    fill-opacity="0"
-                    stroke-width="8"
-                    style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: 260.12387171723486px;"
-                  />
-                  <text
-                    class="CircularProgressbar-text"
-                    x="50"
-                    y="50"
-                  >
-                    10.00 %
-                  </text>
-                </svg>
-              </div>
-              <div
-                class="MuiListItemText-root MuiListItemText-multiline"
-              >
-                <span
-                  class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                  fill-opacity="0"
+                  stroke-width="8"
+                  style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: 260.12387171723486px;"
+                />
+                <text
+                  class="CircularProgressbar-text"
+                  x="50"
+                  y="50"
                 >
-                  cf1
-                </span>
-                <p
-                  class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                >
-                  Vitesse: 1.00
-                </p>
-              </div>
+                  10.00 %
+                </text>
+              </svg>
             </div>
             <div
-              class="MuiListItemSecondaryAction-root"
+              class="MuiListItemText-root MuiListItemText-multiline"
+            >
+              <span
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                cf1
+              </span>
+              <p
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+              >
+                Vitesse: 1.00
+              </p>
+            </div>
+            <div
+              class="MuiListItemIcon-root"
+              style="justify-content: flex-end;"
             >
               <svg
                 aria-hidden="true"
@@ -95,75 +92,72 @@ exports[`CFDrawer can match snapshot 1`] = `
                 />
               </svg>
             </div>
-          </li>
-          <li
-            class="MuiListItem-container"
+          </div>
+          <div
+            aria-disabled="false"
+            class="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+            role="button"
+            tabindex="0"
           >
             <div
-              aria-disabled="false"
-              class="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button MuiListItem-secondaryAction"
-              role="button"
-              tabindex="0"
+              class="MuiListItemIcon-root"
+              style="width: 40px; min-width: unset; margin-right: 1rem;"
             >
-              <div
-                class="MuiListItemIcon-root"
-                style="width: 1rem; margin-right: 1rem;"
+              <svg
+                class="CircularProgressbar "
+                data-test-id="CircularProgressbar"
+                viewBox="0 0 100 100"
               >
-                <svg
-                  class="CircularProgressbar "
-                  data-test-id="CircularProgressbar"
-                  viewBox="0 0 100 100"
-                >
-                  <path
-                    class="CircularProgressbar-trail"
-                    d="
+                <path
+                  class="CircularProgressbar-trail"
+                  d="
       M 50,50
       m 0,-46
       a 46,46 0 1 1 0,92
       a 46,46 0 1 1 0,-92
     "
-                    fill-opacity="0"
-                    stroke-width="8"
-                    style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: 0px;"
-                  />
-                  <path
-                    class="CircularProgressbar-path"
-                    d="
+                  fill-opacity="0"
+                  stroke-width="8"
+                  style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: 0px;"
+                />
+                <path
+                  class="CircularProgressbar-path"
+                  d="
       M 50,50
       m 0,-46
       a 46,46 0 1 1 0,92
       a 46,46 0 1 1 0,-92
     "
-                    fill-opacity="0"
-                    stroke-width="8"
-                    style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: 28.90265241302609px;"
-                  />
-                  <text
-                    class="CircularProgressbar-text"
-                    x="50"
-                    y="50"
-                  >
-                    90.00 %
-                  </text>
-                </svg>
-              </div>
-              <div
-                class="MuiListItemText-root MuiListItemText-multiline"
-              >
-                <span
-                  class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                  fill-opacity="0"
+                  stroke-width="8"
+                  style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: 28.90265241302609px;"
+                />
+                <text
+                  class="CircularProgressbar-text"
+                  x="50"
+                  y="50"
                 >
-                  cf2
-                </span>
-                <p
-                  class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-                >
-                  Vitesse: 
-                </p>
-              </div>
+                  90.00 %
+                </text>
+              </svg>
             </div>
             <div
-              class="MuiListItemSecondaryAction-root"
+              class="MuiListItemText-root MuiListItemText-multiline"
+            >
+              <span
+                class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+              >
+                cf2
+              </span>
+              <p
+                class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+              >
+                Vitesse: 
+              </p>
+            </div>
+            <div
+              class="MuiListItemIcon-root"
+              style="justify-content: flex-end;"
             >
               <svg
                 aria-hidden="true"
@@ -177,7 +171,7 @@ exports[`CFDrawer can match snapshot 1`] = `
                 />
               </svg>
             </div>
-          </li>
+          </div>
         </ul>
       </div>
       <ul
@@ -240,36 +234,6 @@ exports[`CFDrawer can match snapshot 1`] = `
               class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
             >
               Rafraîchissement Automatique
-            </span>
-          </div>
-        </div>
-        <div
-          aria-disabled="false"
-          class="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
-          role="button"
-          tabindex="0"
-        >
-          <div
-            class="MuiListItemIcon-root"
-          >
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
-              />
-            </svg>
-          </div>
-          <div
-            class="MuiListItemText-root"
-          >
-            <span
-              class="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-            >
-              Mode Simulation
             </span>
           </div>
         </div>
