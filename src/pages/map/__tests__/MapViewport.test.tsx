@@ -2,23 +2,27 @@ import MapViewport from '../MapViewport';
 import { create } from 'react-test-renderer';
 import CFContext from '../../../context/CFContext';
 import React from 'react';
-import { State } from '../../../model/Crazyflie';
+import Crazyflie, { State } from '../../../model/Crazyflie';
 
 describe('MapViewport', () => {
-  const cf0 = {
-    droneId: 'cf_0',
-    position: {
-      x: 10,
-      y: 10,
-    },
+  const cf0: Crazyflie = {
+    data: [
+      {
+        x: 10,
+        y: 10,
+      },
+    ],
+
     state: State.inMission,
   };
   const cf1 = {
     droneId: 'cf_1',
-    position: {
-      x: 20,
-      y: 10,
-    },
+    data: [
+      {
+        x: 20,
+        y: 10,
+      },
+    ],
     state: State.crashed,
   };
 

@@ -24,6 +24,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { ObjectWithKey } from '../../model';
 import { useHistory } from 'react-router-dom';
+import 'firebase/database';
 
 interface MapsTableProps extends TableProps {
   mapsData?: ObjectWithKey<MapData>[];

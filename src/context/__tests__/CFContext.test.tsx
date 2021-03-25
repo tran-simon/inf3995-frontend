@@ -24,7 +24,7 @@ describe('CFContext', () => {
           x: 10,
           y: 25,
         },
-        crazyflie: cf,
+        cfData: cf.data[cf.data.length - 1],
         outOfRange: false,
       },
       {
@@ -32,7 +32,7 @@ describe('CFContext', () => {
           x: 30,
           y: 20,
         },
-        crazyflie: cf,
+        cfData: cf.data[cf.data.length - 1],
         outOfRange: false,
       },
       {
@@ -40,7 +40,7 @@ describe('CFContext', () => {
           x: 10,
           y: 30,
         },
-        crazyflie: cf,
+        cfData: cf.data[cf.data.length - 1],
         outOfRange: false,
       },
       {
@@ -48,7 +48,7 @@ describe('CFContext', () => {
           x: 10 - SENSOR_MAX_RANGE,
           y: 20,
         },
-        crazyflie: cf,
+        cfData: cf.data[cf.data.length - 1],
         outOfRange: true,
       },
     ];

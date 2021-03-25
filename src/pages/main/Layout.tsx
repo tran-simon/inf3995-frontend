@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -83,6 +83,10 @@ const Name = ({
   const { name = '' } = useContext(CFContext);
   const [value, setValue] = useState(name);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setValue(name);
+  }, [name]);
 
   return (
     <>

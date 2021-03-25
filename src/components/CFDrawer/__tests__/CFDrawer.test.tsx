@@ -23,7 +23,7 @@ describe('CFDrawer', () => {
       _key=""
       refreshRate={0}
       backendDisconnected={false}
-      cfList={[cf1, cf2]}
+      cfList={{ cf1, cf2 }}
     >
       <CFDrawer />
     </CFProvider>

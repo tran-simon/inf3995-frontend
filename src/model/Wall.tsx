@@ -1,4 +1,4 @@
-import Crazyflie, { CFData } from './Crazyflie';
+import { CFData } from './Crazyflie';
 import Point from '../utils/Point';
 
 export default interface Wall {
