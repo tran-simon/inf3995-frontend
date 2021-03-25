@@ -28,7 +28,9 @@ const ControlDrawer = (props: GridProps) => {
       {...props}
     >
       <Grid item xs={12}>
-        <Typography variant="h2">Nombre de drones: {cfList.length}</Typography>
+        <Typography component="h2">
+          Nombre de drones: {cfList.length}
+        </Typography>
       </Grid>
 
       <Grid item>

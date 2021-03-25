@@ -1,11 +1,18 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import {
   AppBar,
   Box,
+  Button,
   createStyles,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
   IconButton,
   makeStyles,
+  TextField,
   Toolbar,
   Typography,
 } from '@material-ui/core';
@@ -14,6 +21,11 @@ import ControlDrawer from '../../components/ControlDrawer/ControlDrawer';
 import clsx from 'clsx';
 
 import MenuIcon from '@material-ui/icons/Menu';
+import SaveIcon from '@material-ui/icons/Save';
+import { useHistory } from 'react-router-dom';
+import CFContext from '../../context/CFContext';
+import { FirebaseDatabaseMutation } from '@react-firebase/database';
+import EditIcon from '@material-ui/icons/Edit';
 
 const drawerWidth = 240;
 
@@ -63,9 +75,70 @@ const useStyles = makeStyles((theme) => {
   });
 });
 
+const Name = ({
+  onChange = () => {},
+}: {
+  onChange?: (value: string) => void;
+}) => {
+  const { name = '' } = useContext(CFContext);
+  const [value, setValue] = useState(name);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setValue(name);
+  }, [name]);
+
+  return (
+    <>
+      <Typography>{value}</Typography>
+      <IconButton
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        <EditIcon />
+      </IconButton>
+      <>
+        <Dialog open={open} onClose={() => setOpen(false)}>
+          <DialogTitle>Renommer</DialogTitle>
+          <DialogContent>
+            <TextField
+              value={value}
+              onChange={(event) => {
+                setValue(event.target.value);
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setValue(name);
+                setOpen(false);
+              }}
+            >
+              Annuler
+            </Button>
+            <Button
+              onClick={() => {
+                setOpen(false);
+                onChange(value);
+              }}
+            >
+              Confirmer
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </>
+    </>
+  );
+};
+
 const Layout = ({ children }: { children: ReactNode }) => {
   const [open, setOpen] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const history = useHistory();
   const classes = useStyles();
+  const { _key, save, simulation } = useContext(CFContext);
 
   return (
     <Box display="flex" height="100vh">
@@ -80,7 +153,35 @@ const Layout = ({ children }: { children: ReactNode }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography>Centre de contrôle des Crazyflies</Typography>
+          {!!_key && (
+            <FirebaseDatabaseMutation path={`/maps/${_key}/name`} type={'set'}>
+              {({ runMutation }) => (
+                <Name onChange={(value) => runMutation(value)} />
+              )}
+            </FirebaseDatabaseMutation>
+          )}
+
+          {simulation && (
+            <Typography style={{ border: 'solid', padding: '0.5rem' }}>
+              Simulation
+            </Typography>
+          )}
+
+          <IconButton
+            style={{ marginLeft: 'auto', marginRight: '1rem' }}
+            onClick={() => save()}
+          >
+            <SaveIcon />
+          </IconButton>
+
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpenConfirm(true);
+            }}
+          >
+            Retour
+          </Button>
         </Toolbar>
       </AppBar>
       <CFDrawer
@@ -108,6 +209,39 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <main className={classes.content}>{children}</main>
         <ControlDrawer />
       </Box>
+      <Dialog
+        maxWidth="lg"
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+      >
+        <DialogTitle>Voulez-vous vraiment quitter?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Les données non-sauvegardées seront perdues
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenConfirm(false)}>Annuler</Button>
+          <Button
+            onClick={() => {
+              setOpenConfirm(false);
+              save().then(() => {
+                history.push('/');
+              });
+            }}
+          >
+            Sauvegarder et Quitter
+          </Button>
+          <Button
+            onClick={() => {
+              setOpenConfirm(false);
+              history.push('/');
+            }}
+          >
+            Quitter
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

@@ -1,3 +1,5 @@
-export * as Point from './Point';
-export * as constants from './constants';
+import * as Point from './Point';
+import * as constants from './constants';
 export * from './utils';
+
+export { Point, constants };

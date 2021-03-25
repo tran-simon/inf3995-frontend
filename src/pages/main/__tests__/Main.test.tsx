@@ -1,10 +1,23 @@
-// @ts-ignore
 import React from 'react';
-import { render, screen } from '@testing-library/react';
 import Main from '../Main';
+import { create } from 'react-test-renderer';
+import 'firebase/database';
 
-test('renders learn react link', () => {
-  render(<Main />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+jest.mock('firebase', () => ({
+  database: jest.fn().mockReturnValue({
+    ref: jest.fn().mockReturnValue({}),
+  }),
+}));
+
+jest.mock('react-router-dom', () => ({
+  useParams: () => ({
+    mapId: 'MAP_ID',
+  }),
+  useHistory: jest.fn(),
+}));
+
+describe('Main', () => {
+  it('can match snapshot', () => {
+    expect(create(<Main />)).toMatchSnapshot();
+  });
 });

@@ -6,11 +6,9 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemSecondaryAction,
   ListItemText,
   Tooltip,
 } from '@material-ui/core';
-import { Controls } from './Controls';
 import CFContext from '../../context/CFContext';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -18,6 +16,7 @@ import StandbyIcon from '@material-ui/icons/HourglassEmpty';
 import InMissionIcon from '@material-ui/icons/AirplanemodeActive';
 import CrashedIcon from '@material-ui/icons/AirplanemodeInactive';
 import { State } from '../../model/Crazyflie';
+import { Controls } from './Controls';
 
 export const CFDrawer = ({ children, ...props }: DrawerProps) => {
   const { cfList } = useContext(CFContext);
@@ -27,7 +26,11 @@ export const CFDrawer = ({ children, ...props }: DrawerProps) => {
       {children}
       <Box flexGrow={1}>
         <List>
-          {cfList.map((crazyflie, i) => {
+          {Object.keys(cfList).map((droneId, i) => {
+            const crazyflie = cfList[droneId];
+            if (!crazyflie) {
+              return null;
+            }
             const batteryPer = crazyflie.battery ?? 0;
             let stateIcon: ReactElement | null = null;
             switch (crazyflie.state) {
@@ -43,7 +46,13 @@ export const CFDrawer = ({ children, ...props }: DrawerProps) => {
             }
             return (
               <ListItem button key={i}>
-                <ListItemIcon style={{ width: '1rem', marginRight: '1rem' }}>
+                <ListItemIcon
+                  style={{
+                    width: '40px',
+                    minWidth: 'unset',
+                    marginRight: '1rem',
+                  }}
+                >
                   <CircularProgressbar
                     value={batteryPer}
                     text={`${batteryPer.toFixed(2)} %`}
@@ -52,12 +61,12 @@ export const CFDrawer = ({ children, ...props }: DrawerProps) => {
                 <ListItemText
                   secondary={`Vitesse: ${crazyflie.speed?.toFixed(2) || ''}`}
                 >
-                  {crazyflie.droneId}
+                  {droneId}
                 </ListItemText>
                 {stateIcon && (
-                  <ListItemSecondaryAction>
+                  <ListItemIcon style={{ justifyContent: 'flex-end' }}>
                     <Tooltip title={crazyflie.state ?? ''}>{stateIcon}</Tooltip>
-                  </ListItemSecondaryAction>
+                  </ListItemIcon>
                 )}
               </ListItem>
             );

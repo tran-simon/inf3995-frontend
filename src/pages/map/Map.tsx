@@ -6,6 +6,10 @@ import { useMouseHandler } from '../../hooks';
 import { DEFAULT_ZOOM } from '../../utils/constants';
 import Point, { addPoint, newPoint } from '../../utils/Point';
 
+export const calcZoom = (zoom: number, defaultZoom = DEFAULT_ZOOM) => {
+  return (defaultZoom * defaultZoom) / zoom;
+};
+
 /**
  *
  * based on https://css-tricks.com/creating-a-panning-effect-for-svg/
@@ -18,14 +22,16 @@ const Map = () => {
    * Zoom percentage
    */
   const [zoom, setZoom] = useState(DEFAULT_ZOOM);
-  const size = (DEFAULT_ZOOM * DEFAULT_ZOOM) / zoom;
+  const size = calcZoom(zoom);
 
   const [cameraPos, setCameraPos] = useState<Point>(newPoint(0, 0));
 
   const ratioX =
-    mapRef.current && size / mapRef.current.getBoundingClientRect().width;
+    mapRef.current &&
+    size / (mapRef.current.getBoundingClientRect().width || 1);
   const ratioY =
-    mapRef.current && size / mapRef.current.getBoundingClientRect().height;
+    mapRef.current &&
+    size / (mapRef.current.getBoundingClientRect().height || 1);
 
   const mouseHandler = useMouseHandler({
     onMouseDrag: (event, origin) => {
@@ -70,6 +76,7 @@ const Map = () => {
         <Grid item xs={12} container spacing={2}>
           <Grid item xs={12} sm={4}>
             <Slider
+              id="slider-zoom"
               value={zoom}
               onChange={(e, v) => setZoom(v as number)}
               max={200}
