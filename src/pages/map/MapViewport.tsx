@@ -3,7 +3,8 @@ import React, { ReactNode, SVGProps, useContext } from 'react';
 import CFContext from '../../context/CFContext';
 import { getWalls, State } from '../../model/Crazyflie';
 import Wall from '../../model/Wall';
-import { Point } from '../../utils';
+import Point from '../../utils/Point';
+import { addPoint } from '../../utils/Point';
 
 const MapViewport = React.forwardRef<
   SVGSVGElement,
@@ -60,9 +61,16 @@ const MapViewport = React.forwardRef<
       const relativePosition = cf.data.length
         ? cf.data[cf.data.length - 1]
         : undefined;
-      const { x, y } = relativePosition
-        ? Point.addPoint(relativePosition, initialPosition)
-        : initialPosition;
+
+      let { x, y } = initialPosition;
+      if (relativePosition) {
+        const { x: relX, y: relY } = relativePosition;
+        if (relX == null || relY == null) {
+          return;
+        }
+        x += relX;
+        y += relY;
+      }
 
       cfsSvg.push(
         <circle

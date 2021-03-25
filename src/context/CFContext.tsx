@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import Crazyflie, { CrazyflieDTO } from '../model/Crazyflie';
+import Crazyflie, { cfDataFromDTO, CrazyflieDTO } from '../model/Crazyflie';
 import { noop } from 'lodash';
 import { KeyArray, SetState } from '../utils';
 import { BackendREST } from '../backendApi/BackendREST';
@@ -92,7 +92,7 @@ export const CFProvider = ({
             const cf = cfList[droneId];
             const data = cf?.data || [];
             if (v.cfData) {
-              data.push(v.cfData);
+              data.push(cfDataFromDTO(v.cfData));
             }
 
             newCfList[droneId] = {

@@ -130,12 +130,20 @@ const useMockedCf = (cfList: KeyArray<Crazyflie>) => {
     const cfsDto: CrazyflieDTO[] = Object.keys(mockCfList.current).map(
       (droneId) => {
         const cf = mockCfList.current[droneId] as Crazyflie;
+        const data = cf.data[cf.data.length - 1];
+        const point = [String(data.x), String(data.y)];
+        const sensors = [
+          String(data.north),
+          String(data.south),
+          String(data.east),
+          String(data.west),
+        ];
         return {
           droneId,
           state: cf.state,
           speed: cf.speed,
           battery: cf.battery,
-          cfData: cf.data[cf.data.length - 1],
+          cfData: [point, sensors],
         };
       },
     );

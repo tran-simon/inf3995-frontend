@@ -15,12 +15,28 @@ export interface CrazyflieDTO {
   battery?: number;
   speed?: number;
   state?: StateType;
-  cfData?: CFData;
+  cfData?: CFDataDTO;
 
   initialPosition?: Point;
 }
 
-export interface CFData extends Point, Sensors {}
+type CFDataDTO = (string | undefined)[][];
+
+export interface CFData extends Partial<Point>, Sensors {}
+
+export const cfDataFromDTO = (cfDataDto: CFDataDTO): CFData => {
+  const [x, y] = cfDataDto[0];
+  const [north, south, east, west] = cfDataDto[1];
+
+  return {
+    x: x != null ? +x : undefined,
+    y: y != null ? +y : undefined,
+    north: north != null ? +north : undefined,
+    south: south != null ? +south : undefined,
+    east: east != null ? +east : undefined,
+    west: west != null ? +west : undefined,
+  };
+};
 
 export interface Sensors {
   north?: number;
@@ -78,17 +94,19 @@ export const getWalls = (crazyflie: Crazyflie): Wall[] => {
           v = SENSOR_MAX_RANGE;
         }
 
-        res.push({
-          cfData: {
-            ...data,
-            ...addPoint(data, initialPosition),
-          },
-          position: addPoint(
-            addPoint({ x, y }, initialPosition),
-            scalePoint(newPoint(xScale, yScale), v ?? SENSOR_MAX_RANGE),
-          ),
-          outOfRange: notDetected,
-        });
+        if (x != null && y != null) {
+          res.push({
+            cfData: {
+              ...data,
+              ...addPoint({ x, y }, initialPosition),
+            },
+            position: addPoint(
+              addPoint({ x, y }, initialPosition),
+              scalePoint(newPoint(xScale, yScale), v ?? SENSOR_MAX_RANGE),
+            ),
+            outOfRange: notDetected,
+          });
+        }
       }
     });
 
