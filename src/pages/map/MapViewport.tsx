@@ -3,8 +3,6 @@ import React, { ReactNode, SVGProps, useContext } from 'react';
 import CFContext from '../../context/CFContext';
 import { getWalls, State } from '../../model/Crazyflie';
 import Wall from '../../model/Wall';
-import Point from '../../utils/Point';
-import { addPoint } from '../../utils/Point';
 
 const MapViewport = React.forwardRef<
   SVGSVGElement,
