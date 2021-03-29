@@ -31,10 +31,10 @@ export const cfDataFromDTO = (cfDataDto: CFDataDTO): CFData => {
   return {
     x: x != null ? +x : undefined,
     y: y != null ? +y : undefined,
-    north: north != null ? +north : undefined,
-    south: south != null ? +south : undefined,
-    east: east != null ? +east : undefined,
-    west: west != null ? +west : undefined,
+    north: north != null && +north >= 0 ? +north : undefined,
+    south: south != null && +south >= 0 ? +south : undefined,
+    east: east != null && +east >= 0 ? +east : undefined,
+    west: west != null && +west >= 0 ? +west : undefined,
   };
 };
 
