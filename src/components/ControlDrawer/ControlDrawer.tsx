@@ -18,6 +18,7 @@ const ControlDrawer = (props: GridProps) => {
     setBackendUrl,
     backendUrl,
     backendDisconnected,
+    flash,
   } = useContext(CFContext);
 
   const crazyflies = Object.values(cfList);
@@ -62,6 +63,19 @@ const ControlDrawer = (props: GridProps) => {
           disabled={backendUrl === MOCK_BACKEND_URL}
         >
           Utiliser les faux crazyflies
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button
+          onClick={() => {
+            flash().then((r) => {
+              if (r) {
+                r.text().then((value) => console.log(value));
+              }
+            });
+          }}
+        >
+          Mettre à jour les crazyflies
         </Button>
       </Grid>
     </Grid>

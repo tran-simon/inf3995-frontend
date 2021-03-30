@@ -33,6 +33,7 @@ interface ICFContext extends MapData {
 
   land: () => Promise<Response | void>;
   takeoff: () => Promise<Response | void>;
+  flash: () => Promise<Response | void>;
 
   save: () => Promise<void>;
 }
@@ -51,6 +52,7 @@ const DefaultCfContext: ICFContext = {
 
   land: async () => {},
   takeoff: async () => {},
+  flash: async () => {},
 
   save: async () => {},
 };
@@ -213,6 +215,12 @@ export const CFProvider = ({
     }
   }, [props, cfList, simulation]);
 
+  const flash = useCallback(async () => {
+    if (!backendDisconnected) {
+      return BackendREST.flash(backendUrl);
+    }
+  }, [backendUrl, backendDisconnected]);
+
   return (
     <CFContext.Provider
       value={{
@@ -230,6 +238,7 @@ export const CFProvider = ({
         land,
         simulation,
         save,
+        flash,
       }}
     >
       {children}
