@@ -39,8 +39,8 @@ const MapViewport = React.forwardRef<
           wallsSvg.push(
             <rect
               key={`wall_${i}_${droneId}`}
-              width="1"
-              height="1"
+              width="2"
+              height="2"
               {...destination}
               fill="red"
             >
