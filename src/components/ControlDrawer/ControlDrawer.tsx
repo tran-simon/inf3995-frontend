@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Button,
+  CircularProgress,
   Grid,
   GridProps,
   Typography,
@@ -11,6 +12,7 @@ import { MOCK_BACKEND_URL } from '../../context/useMockedCf';
 
 const ControlDrawer = (props: GridProps) => {
   const theme = useTheme();
+  const [flashLoading, setFlashLoading] = useState(false);
   const {
     cfList,
     takeoff,
@@ -68,14 +70,15 @@ const ControlDrawer = (props: GridProps) => {
       <Grid item>
         <Button
           onClick={() => {
-            flash().then((r) => {
-              if (r) {
-                r.text().then((value) => console.log(value));
-              }
+            setFlashLoading(true);
+            flash().finally(() => {
+              setFlashLoading(false);
             });
           }}
+          disabled={flashLoading || backendDisconnected}
         >
-          Mettre à jour les crazyflies
+          Mettre à jour les crazyflies&nbsp;
+          {flashLoading && <CircularProgress size={20} />}
         </Button>
       </Grid>
     </Grid>

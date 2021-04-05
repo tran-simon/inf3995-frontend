@@ -23,6 +23,10 @@ interface ICFContext extends MapData {
   scan: () => Promise<Response | void>;
   updateStats: () => Promise<Response | void>;
 
+  showLogs: boolean;
+  setShowLogs: SetState<boolean>;
+  refreshLogs: () => Promise<string | void>;
+
   backendUrl?: string;
   setBackendUrl: SetState<string | undefined>;
 
@@ -49,6 +53,9 @@ const DefaultCfContext: ICFContext = {
   backendUrl: BACKEND_URL,
   setBackendUrl: noop,
   setRefreshRate: noop,
+  showLogs: false,
+  setShowLogs: noop,
+  refreshLogs: async () => {},
 
   land: async () => {},
   takeoff: async () => {},
@@ -80,6 +87,7 @@ export const CFProvider = ({
     props.simulation ?? false,
   );
   const [backendSim, setBackendSim] = useState<boolean | undefined>();
+  const [showLogs, setShowLogs] = useState(false);
 
   const { setMockCf } = useMockedCf(cfList);
 
@@ -221,6 +229,12 @@ export const CFProvider = ({
     }
   }, [backendUrl, backendDisconnected]);
 
+  const getLogs = useCallback(async () => {
+    if (!backendDisconnected) {
+      return BackendREST.logs(backendUrl).then((v) => v.text());
+    }
+  }, [backendUrl, backendDisconnected]);
+
   return (
     <CFContext.Provider
       value={{
@@ -239,6 +253,9 @@ export const CFProvider = ({
         simulation,
         save,
         flash,
+        showLogs,
+        setShowLogs,
+        refreshLogs: getLogs,
       }}
     >
       {children}
