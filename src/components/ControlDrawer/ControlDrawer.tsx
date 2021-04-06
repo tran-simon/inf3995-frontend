@@ -7,7 +7,6 @@ import {
   useTheme,
 } from '@material-ui/core';
 import CFContext from '../../context/CFContext';
-import { MOCK_BACKEND_URL } from '../../context/useMockedCf';
 
 const ControlDrawer = (props: GridProps) => {
   const theme = useTheme();
@@ -57,16 +56,10 @@ const ControlDrawer = (props: GridProps) => {
       </Grid>
       <Grid item>
         <Button
-          onClick={() => {
-            setBackendUrl(MOCK_BACKEND_URL);
-          }}
-          disabled={backendUrl === MOCK_BACKEND_URL}
-        >
-          Utiliser les faux crazyflies
-        </Button>
-      </Grid>
-      <Grid item>
-        <Button
+          disabled={
+            backendDisconnected ||
+            crazyflies.findIndex((cf) => cf?.state !== 'Standby') !== -1
+          }
           onClick={() => {
             flash().then((r) => {
               if (r) {

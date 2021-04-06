@@ -9,7 +9,6 @@ import Crazyflie, { cfDataFromDTO, CrazyflieDTO } from '../model/Crazyflie';
 import { noop } from 'lodash';
 import { KeyArray, SetState } from '../utils';
 import { BackendREST } from '../backendApi/BackendREST';
-import useMockedCf, { MOCK_BACKEND_URL } from './useMockedCf';
 import MapData from '../model/MapData';
 import firebase from 'firebase/app';
 import 'firebase/database';
@@ -81,8 +80,6 @@ export const CFProvider = ({
   );
   const [backendSim, setBackendSim] = useState<boolean | undefined>();
 
-  const { setMockCf } = useMockedCf(cfList);
-
   const updateCfList = useCallback(
     (val: any) => {
       if (Array.isArray(val)) {
@@ -149,25 +146,19 @@ export const CFProvider = ({
   );
 
   useEffect(() => {
-    if (backendUrl === MOCK_BACKEND_URL) {
-      setMockCf(true);
-      setBackendDisconnected(false);
-    } else {
-      BackendREST.liveCheck(backendUrl)
-        .then((response) => {
-          setBackendDisconnected(!response.ok);
-          response.json().then((v) => {
-            if (v.simulation != null) {
-              setBackendSim(v.simulation);
-            }
-          });
-        })
-        .catch(() => {
-          //todo: uncomment after cdr
-          // setBackendDisconnected(true);
+    BackendREST.liveCheck(backendUrl)
+      .then((response) => {
+        setBackendDisconnected(!response.ok);
+        response.json().then((v) => {
+          if (v.simulation != null) {
+            setBackendSim(v.simulation);
+          }
         });
-    }
-  }, [backendUrl, setBackendDisconnected, setMockCf]);
+      })
+      .catch(() => {
+        setBackendDisconnected(true);
+      });
+  }, [backendUrl, setBackendDisconnected]);
 
   useEffect(() => {
     if (
