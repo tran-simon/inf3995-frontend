@@ -26,6 +26,7 @@ import { useHistory } from 'react-router-dom';
 import CFContext from '../../context/CFContext';
 import { FirebaseDatabaseMutation } from '@react-firebase/database';
 import EditIcon from '@material-ui/icons/Edit';
+import Logs from '../Logs/Logs';
 
 const drawerWidth = 240;
 
@@ -138,7 +139,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const [openConfirm, setOpenConfirm] = useState(false);
   const history = useHistory();
   const classes = useStyles();
-  const { _key, save, simulation } = useContext(CFContext);
+  const { _key, save, simulation, showLogs } = useContext(CFContext);
 
   return (
     <Box display="flex" height="100vh">
@@ -242,6 +243,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Logs open={showLogs} />
     </Box>
   );
 };

@@ -14,6 +14,7 @@ import ConnectedIcon from '@material-ui/icons/WifiTethering';
 import DiconnectedIcon from '@material-ui/icons/PortableWifiOff';
 import ToggleOffOutlinedIcon from '@material-ui/icons/ToggleOffOutlined';
 import ToggleOnOutlinedIcon from '@material-ui/icons/ToggleOnOutlined';
+import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 
 type ControlSectionProps = {
   icon?: ReactNode;
@@ -51,6 +52,7 @@ export const Controls = () => {
     setBackendUrl,
     setRefreshRate,
     refreshRate,
+    setShowLogs,
   } = useContext(CFContext);
 
   return (
@@ -71,6 +73,14 @@ export const Controls = () => {
       </ControlSection>
 
       <Divider />
+      <ControlSection
+        icon={<FormatListBulletedIcon />}
+        onClick={async () => {
+          setShowLogs(true);
+        }}
+      >
+        Afficher le journal
+      </ControlSection>
 
       <ListItem>
         <ListItemIcon>
