@@ -34,6 +34,7 @@ interface ICFContext extends MapData {
   refreshRate?: number;
   setRefreshRate: SetState<number>;
 
+  returnBase: () => Promise<Response | void>;
   land: () => Promise<Response | void>;
   takeoff: () => Promise<Response | void>;
   flash: () => Promise<Response | void>;
@@ -56,6 +57,7 @@ const DefaultCfContext: ICFContext = {
   setShowLogs: noop,
   refreshLogs: async () => {},
 
+  returnBase: async () => {},
   land: async () => {},
   takeoff: async () => {},
   flash: async () => {},
@@ -198,6 +200,12 @@ export const CFProvider = ({
     }
   };
 
+  const returnBase = async () => {
+    if (!backendDisconnected) {
+      return BackendREST.land(backendUrl, true);
+    }
+  };
+
   const save = useCallback(async () => {
     if (props._key) {
       const { name } = props;
@@ -240,6 +248,7 @@ export const CFProvider = ({
         cfList,
         setCfList,
         takeoff,
+        returnBase,
         land,
         simulation,
         save,

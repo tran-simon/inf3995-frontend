@@ -16,8 +16,7 @@ const ControlDrawer = (props: GridProps) => {
     cfList,
     takeoff,
     land,
-    setBackendUrl,
-    backendUrl,
+    returnBase,
     backendDisconnected,
     flash,
   } = useContext(CFContext);
@@ -57,8 +56,14 @@ const ControlDrawer = (props: GridProps) => {
         </Button>
       </Grid>
       <Grid item>
+        <Button disabled={disabled} onClick={returnBase}>
+          Retourner à la base
+        </Button>
+      </Grid>
+      <Grid item>
         <Button
           disabled={
+            flashLoading ||
             backendDisconnected ||
             crazyflies.findIndex((cf) => cf?.state !== 'Standby') !== -1
           }
@@ -68,7 +73,6 @@ const ControlDrawer = (props: GridProps) => {
               setFlashLoading(false);
             });
           }}
-          disabled={flashLoading || backendDisconnected}
         >
           Mettre à jour les crazyflies&nbsp;
           {flashLoading && <CircularProgress size={20} />}

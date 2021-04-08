@@ -16,8 +16,8 @@ export class BackendREST {
     });
   };
 
-  static land = async (backendUrl?: string) => {
-    return fetch(`${backendUrl}/land`, options);
+  static land = async (backendUrl?: string, returnToBase?: boolean) => {
+    return fetch(`${backendUrl}/land?return=${returnToBase}`, options);
   };
 
   static takeoff = async (backendUrl?: string) => {

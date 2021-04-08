@@ -41,7 +41,7 @@ const Logs = (props: DialogProps) => {
     if (endMessageRef.current != null) {
       endMessageRef.current.scrollIntoView({});
     }
-  }, [endMessageRef.current]);
+  }, []);
 
   return (
     <Dialog
