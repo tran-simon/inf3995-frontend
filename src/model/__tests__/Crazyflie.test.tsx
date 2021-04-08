@@ -12,9 +12,9 @@ describe('CFContext', () => {
       data: [
         {
           x: 10,
-          y: 20,
+          y: 15,
           north: 5,
-          east: 20,
+          east: 15,
           south: -10,
         },
       ],
@@ -26,14 +26,6 @@ describe('CFContext', () => {
       {
         position: {
           x: 10,
-          y: 25,
-        },
-        cfData: cf.data[cf.data.length - 1],
-        outOfRange: false,
-      },
-      {
-        position: {
-          x: 30,
           y: 20,
         },
         cfData: cf.data[cf.data.length - 1],
@@ -42,7 +34,15 @@ describe('CFContext', () => {
       {
         position: {
           x: 10,
-          y: 30,
+          y: 25,
+        },
+        cfData: cf.data[cf.data.length - 1],
+        outOfRange: false,
+      },
+      {
+        position: {
+          x: 25,
+          y: 15,
         },
         cfData: cf.data[cf.data.length - 1],
         outOfRange: false,
@@ -50,7 +50,7 @@ describe('CFContext', () => {
       {
         position: {
           x: 10 - SENSOR_MAX_RANGE,
-          y: 20,
+          y: 15,
         },
         cfData: cf.data[cf.data.length - 1],
         outOfRange: true,

@@ -28,6 +28,7 @@ describe('Controls', () => {
       .fn()
       .mockImplementation(async (url: string) => ({
         ok: url === 'http://localhost:5000',
+        json: async () => ({}),
       }));
 
     BackendREST.updateStats = jest.fn().mockImplementation(async () => []);
