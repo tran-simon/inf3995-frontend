@@ -56,6 +56,7 @@ const Logs = (props: DialogProps) => {
         <DialogContentText style={{ whiteSpace: 'pre-line' }}>
           {logs}
           <Typography
+            component="span"
             ref={endMessageRef}
             color="textPrimary"
             style={{ textAlign: 'center', margin: '1rem' }}
