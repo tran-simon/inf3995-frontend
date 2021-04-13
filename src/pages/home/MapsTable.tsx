@@ -13,6 +13,7 @@ import {
   TableHead,
   TableProps,
   TableRow,
+  Tooltip,
 } from '@material-ui/core';
 import { format, isValid } from 'date-fns';
 import { frCA } from 'date-fns/locale';
@@ -24,10 +25,27 @@ import {
 import React, { useEffect, useState } from 'react';
 import { ObjectWithKey } from '../../model';
 import { useHistory } from 'react-router-dom';
+import FlightIcon from '@material-ui/icons/Flight';
+import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
 
 interface MapsTableProps extends TableProps {
   mapsData?: ObjectWithKey<MapData>[];
 }
+
+const TypeIcon = ({ simulation }: { simulation?: boolean }) => {
+  if (simulation) {
+    return (
+      <Tooltip title="Simulation">
+        <DesktopWindowsIcon />
+      </Tooltip>
+    );
+  }
+  return (
+    <Tooltip title="Crazyflies">
+      <FlightIcon />
+    </Tooltip>
+  );
+};
 
 const MapsTable = ({ mapsData: _mapsData, ...props }: MapsTableProps) => {
   const [deleteMapKey, setDeleteMapKey] = useState<string | null>(null);
@@ -43,7 +61,7 @@ const MapsTable = ({ mapsData: _mapsData, ...props }: MapsTableProps) => {
       <Table {...props}>
         <TableHead>
           <TableRow>
-            <TableCell>Indice</TableCell>
+            <TableCell>Type</TableCell>
             <TableCell>Nom</TableCell>
             <TableCell>Date de dernière modification</TableCell>
             <TableCell>Actions</TableCell>
@@ -62,7 +80,9 @@ const MapsTable = ({ mapsData: _mapsData, ...props }: MapsTableProps) => {
                   }}
                   style={{ cursor: 'pointer' }}
                 >
-                  <TableCell>{i}</TableCell>
+                  <TableCell>
+                    <TypeIcon simulation={map.simulation} />
+                  </TableCell>
                   <TableCell>{map.name}</TableCell>
                   <TableCell>
                     {isValid(map.date) &&
