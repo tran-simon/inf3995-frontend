@@ -1,5 +1,4 @@
 import MapData from '../MapData';
-import { format } from 'date-fns';
 
 const mockedDate = 1617918315528;
 

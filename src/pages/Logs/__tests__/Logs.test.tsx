@@ -1,6 +1,5 @@
-import React, { FunctionComponent, ReactElement } from 'react';
-import CFContext, { CFProvider } from '../../../context/CFContext';
-import { CFDrawer } from '../../../components/CFDrawer/CFDrawer';
+import React, { FunctionComponent } from 'react';
+import CFContext from '../../../context/CFContext';
 import { render, waitFor } from '@testing-library/react';
 import Logs from '../Logs';
 

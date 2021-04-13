@@ -1,7 +1,6 @@
 import React from 'react';
-import { fireEvent, render, waitFor, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Home, { NewExplorationBtn } from '../Home';
-import { FirebaseDatabaseMutation } from '@react-firebase/database';
 
 jest.mock('@react-firebase/database');
 
