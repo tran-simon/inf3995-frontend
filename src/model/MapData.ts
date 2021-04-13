@@ -13,7 +13,8 @@ export default class MapData {
     this.date = mapData.date;
     this.cfList = mapData.cfList;
 
-    Object.assign(this, mapData);
+    this.name = mapData.name;
+    this.simulation = mapData.simulation;
   }
 
   /**
@@ -73,24 +74,28 @@ export default class MapData {
    */
   static toDto(mapData: MapData): MapDataDTO {
     /* Removed undefined values from objects in cfList */
-    const cfList = Object.keys(mapData.cfList).reduce(
-      (cfList, key): KeyArray<Crazyflie> => {
-        const cf = mapData.cfList[key];
-        return !cf
-          ? cfList
-          : {
-              ...cfList,
-              [key]: _.omitBy(
-                {
-                  ...cf,
-                  data: cf.data.map((data) => _.omitBy(data, _.isUndefined)),
-                },
-                _.isUndefined,
-              ),
-            };
-      },
-      {},
-    );
+    const cfList = !mapData.cfList
+      ? {}
+      : Object.keys(mapData.cfList).reduce(
+          (cfList, key): KeyArray<Crazyflie> => {
+            const cf = mapData.cfList[key];
+            return !cf
+              ? cfList
+              : {
+                  ...cfList,
+                  [key]: _.omitBy(
+                    {
+                      ...cf,
+                      data: (cf.data || []).map((data) =>
+                        _.omitBy(data, _.isUndefined),
+                      ),
+                    },
+                    _.isUndefined,
+                  ),
+                };
+          },
+          {},
+        );
 
     return _.omitBy<MapData>(
       {

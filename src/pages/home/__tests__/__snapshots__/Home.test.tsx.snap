@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home can match snapshot 1`] = `
+<DocumentFragment>
+  <main
+    style="display: flex; flex-direction: column; height: 100vh;"
+  >
+    <div
+      class="MuiContainer-root MuiContainer-maxWidthSm"
+      style="padding: 64px 0px 48px;"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-h2 MuiTypography-gutterBottom MuiTypography-alignCenter"
+        style="font-size: 3rem;"
+      >
+        Centre de contrôle des Crazyflies
+      </h1>
+      <p
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-colorTextSecondary MuiTypography-paragraph MuiTypography-alignCenter"
+      >
+        INF3995 - Équipe 100
+      </p>
+    </div>
+    <div
+      class="MuiContainer-root MuiContainer-maxWidthMd"
+    >
+      <div
+        class="MuiPaper-root MuiTableContainer-root MuiPaper-elevation1 MuiPaper-rounded"
+        style="height: 50vh;"
+      />
+    </div>
+  </main>
+</DocumentFragment>
+`;

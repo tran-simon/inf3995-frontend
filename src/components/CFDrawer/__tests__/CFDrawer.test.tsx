@@ -1,7 +1,7 @@
 import { CFProvider } from '../../../context/CFContext';
 import React from 'react';
 import { CFDrawer } from '../CFDrawer';
-import { render, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import Crazyflie from '../../../model/Crazyflie';
 
 describe('CFDrawer', () => {
@@ -32,6 +32,18 @@ describe('CFDrawer', () => {
   it('can match snapshot', async () => {
     await waitFor(() => {
       expect(render(DrawerComp).asFragment()).toMatchSnapshot();
+    });
+  });
+
+  it('can open drone dialog', async () => {
+    render(DrawerComp);
+    expect(screen.queryByRole('dialog')).toBeNull();
+
+    const item = screen.getByText('cf1');
+    fireEvent.click(item);
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog')).not.toBeNull();
     });
   });
 });

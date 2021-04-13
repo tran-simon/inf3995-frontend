@@ -1,0 +1,134 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MapsTable can match snapshot 1`] = `
+<DocumentFragment>
+  <table
+    class="MuiTable-root"
+  >
+    <thead
+      class="MuiTableHead-root"
+    >
+      <tr
+        class="MuiTableRow-root MuiTableRow-head"
+      >
+        <th
+          class="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+        >
+          Indice
+        </th>
+        <th
+          class="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+        >
+          Nom
+        </th>
+        <th
+          class="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+        >
+          Date de dernière modification
+        </th>
+        <th
+          class="MuiTableCell-root MuiTableCell-head"
+          scope="col"
+        >
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      class="MuiTableBody-root"
+    >
+      <tr
+        class="MuiTableRow-root MuiTableRow-hover"
+        style="cursor: pointer;"
+      >
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          0
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          name_2
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          jeudi 8 avril 2021 à 17:35:35
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          <button
+            class="MuiButtonBase-root MuiIconButton-root"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiIconButton-label"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z"
+                />
+              </svg>
+            </span>
+          </button>
+        </td>
+      </tr>
+      <tr
+        class="MuiTableRow-root MuiTableRow-hover"
+        style="cursor: pointer;"
+      >
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          1
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          name_1
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          jeudi 8 avril 2021 à 17:35:31
+        </td>
+        <td
+          class="MuiTableCell-root MuiTableCell-body"
+        >
+          <button
+            class="MuiButtonBase-root MuiIconButton-root"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiIconButton-label"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z"
+                />
+              </svg>
+            </span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</DocumentFragment>
+`;

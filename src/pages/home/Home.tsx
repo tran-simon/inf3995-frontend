@@ -90,7 +90,7 @@ const Home = () => {
   );
 };
 
-const NewExplorationBtn = ({
+export const NewExplorationBtn = ({
   runMutation,
   ...props
 }: ButtonProps & {

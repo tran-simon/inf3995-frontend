@@ -76,11 +76,7 @@ const useStyles = makeStyles((theme) => {
   });
 });
 
-const Name = ({
-  onChange = () => {},
-}: {
-  onChange?: (value: string) => void;
-}) => {
+const Name = ({ onChange }: { onChange: (value: string) => void }) => {
   const { name = '' } = useContext(CFContext);
   const [value, setValue] = useState(name);
   const [open, setOpen] = useState(false);
