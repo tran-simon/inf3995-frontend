@@ -1,3 +1,5 @@
+import Point from '../utils/Point';
+
 const options: RequestInit = { cache: 'no-store' };
 export class BackendREST {
   static scan = async (backendUrl?: string) => {
@@ -20,8 +22,19 @@ export class BackendREST {
     return fetch(`${backendUrl}/land?return=${returnToBase}`, options);
   };
 
-  static takeoff = async (backendUrl?: string) => {
-    return fetch(`${backendUrl}/takeOff`, options);
+  static takeoff = async (
+    backendUrl = '',
+    droneInitialPositions: Point[] = [],
+  ) => {
+    return fetch(`${backendUrl}/takeOff`, {
+      ...options,
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(droneInitialPositions.map((pos) => [pos.x, pos.y])),
+    });
   };
 
   static liveCheck = async (backendUrl?: string) => {

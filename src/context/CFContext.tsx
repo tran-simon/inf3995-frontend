@@ -12,6 +12,7 @@ import { BackendREST } from '../backendApi/BackendREST';
 import MapData from '../model/MapData';
 import firebase from 'firebase/app';
 import 'firebase/database';
+import Point from '../utils/Point';
 
 const BACKEND_URL =
   process.env.REACT_APP_BACKEND_URL ?? 'http://localhost:5000';
@@ -189,11 +190,18 @@ export const CFProvider = ({
     }
   }, [refreshRate, backendUrl, backendDisconnected, updateStats]);
 
-  const takeoff = async () => {
+  const takeoff = useCallback(async () => {
     if (!backendDisconnected) {
-      return BackendREST.takeoff(backendUrl);
+      const cfListArr = Object.values(cfList);
+      const initialPositions = cfListArr
+        .map((crazyflie) => crazyflie?.initialPosition)
+        .filter((pos): pos is Point => pos !== undefined);
+      if (initialPositions.length === cfListArr.length) {
+        return BackendREST.takeoff(backendUrl, initialPositions);
+      }
     }
-  };
+  }, [backendDisconnected, backendUrl, cfList]);
+
   const land = async () => {
     if (!backendDisconnected) {
       return BackendREST.land(backendUrl);
