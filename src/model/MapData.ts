@@ -35,6 +35,7 @@ export default class MapData {
 
   /**
    * Creates a MapData from a DTO
+   * will unescape the cf names ('_' replaced to '/')
    *
    * default values will be used:
    * date: The current date
@@ -48,11 +49,12 @@ export default class MapData {
       : Object.keys(mapData.cfList).reduce(
           (cfList, key): KeyArray<Crazyflie> => {
             const cf = mapData.cfList && mapData.cfList[key];
+            const unescapedKey = key.replaceAll('_', '/');
             return !cf
               ? cfList
               : {
                   ...cfList,
-                  [key]: {
+                  [unescapedKey]: {
                     ...cf,
                     data: cf.data ?? [],
                   },
@@ -70,6 +72,9 @@ export default class MapData {
 
   /**
    * Remove undefined values from mapData to transform it into a Data Transfer Object ready to be saved in the database
+   *
+   * CF names will be escaped to replace the '/' characters with '_'
+   *
    * @param mapData
    */
   static toDto(mapData: MapData): MapDataDTO {
@@ -79,11 +84,12 @@ export default class MapData {
       : Object.keys(mapData.cfList).reduce(
           (cfList, key): KeyArray<Crazyflie> => {
             const cf = mapData.cfList[key];
+            const escapedKey = key.replaceAll('/', '_');
             return !cf
               ? cfList
               : {
                   ...cfList,
-                  [key]: _.omitBy(
+                  [escapedKey]: _.omitBy(
                     {
                       ...cf,
                       data: (cf.data || []).map((data) =>
