@@ -8,7 +8,7 @@ const MapViewport = React.forwardRef<
   SVGSVGElement,
   Partial<SVGProps<SVGSVGElement>>
 >((props, ref) => {
-  const { cfList } = useContext(CFContext);
+  const { cfList, simulation } = useContext(CFContext);
 
   const cfsSvg: ReactNode[] = [];
   const linesSvg: ReactNode[] = [];
@@ -82,7 +82,7 @@ const MapViewport = React.forwardRef<
           <title>{droneId}</title>
         </circle>,
       );
-      addWalls(getWalls(cf));
+      addWalls(getWalls(cf, simulation));
     }
   });
 

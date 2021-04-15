@@ -1,6 +1,6 @@
 import Point, { addPoint, newPoint, scalePoint } from '../utils/Point';
 import Wall from './Wall';
-import { SENSOR_MAX_RANGE } from '../utils/constants';
+import { SENSOR_MAX_RANGE, SENSOR_MAX_RANGE_SIM } from '../utils/constants';
 
 export default interface Crazyflie {
   battery?: number;
@@ -54,9 +54,13 @@ export const State = {
   crashed: 'Crashed' as StateType,
 };
 
-export const getWalls = (crazyflie: Crazyflie): Wall[] => {
+export const getWalls = (
+  crazyflie: Crazyflie,
+  simulation?: boolean,
+): Wall[] => {
   const res: Wall[] = [];
   const { initialPosition, data = [] } = crazyflie;
+  const sensorMaxRange = simulation ? SENSOR_MAX_RANGE_SIM : SENSOR_MAX_RANGE;
 
   initialPosition &&
     data.forEach((data) => {
@@ -89,9 +93,9 @@ export const getWalls = (crazyflie: Crazyflie): Wall[] => {
             break;
         }
 
-        const notDetected = v == null || v >= SENSOR_MAX_RANGE;
+        const notDetected = v == null || v >= sensorMaxRange;
         if (notDetected) {
-          v = SENSOR_MAX_RANGE;
+          v = sensorMaxRange;
         }
 
         if (x != null && y != null) {
@@ -102,7 +106,7 @@ export const getWalls = (crazyflie: Crazyflie): Wall[] => {
             },
             position: addPoint(
               addPoint({ x, y }, initialPosition),
-              scalePoint(newPoint(xScale, yScale), v ?? SENSOR_MAX_RANGE),
+              scalePoint(newPoint(xScale, yScale), v ?? sensorMaxRange),
             ),
             outOfRange: notDetected,
           });
