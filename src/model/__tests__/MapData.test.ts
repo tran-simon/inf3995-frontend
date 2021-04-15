@@ -19,7 +19,7 @@ describe('MapData', () => {
     const expected: MapData = {
       date: mockedDate,
       cfList: {
-        id_1: {
+        'id/1': {
           data: [],
         },
       },
@@ -47,14 +47,14 @@ describe('MapData', () => {
     expect(
       MapData.toDto({
         cfList: {
-          cf1: {
+          'cf/1': {
             data: undefined,
           },
         },
       } as any),
     ).toEqual({
       cfList: {
-        cf1: {
+        cf_1: {
           data: [],
         },
       },

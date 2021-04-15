@@ -47,9 +47,9 @@ export default class MapData {
     const cfList = !mapData.cfList
       ? {}
       : Object.keys(mapData.cfList).reduce(
-          (cfList, key): KeyArray<Crazyflie> => {
+          (cfList, key = ''): KeyArray<Crazyflie> => {
             const cf = mapData.cfList && mapData.cfList[key];
-            const unescapedKey = key.replaceAll('_', '/');
+            const unescapedKey = key.replace(/_/g, '/');
             return !cf
               ? cfList
               : {
@@ -82,9 +82,9 @@ export default class MapData {
     const cfList = !mapData.cfList
       ? {}
       : Object.keys(mapData.cfList).reduce(
-          (cfList, key): KeyArray<Crazyflie> => {
+          (cfList, key = ''): KeyArray<Crazyflie> => {
             const cf = mapData.cfList[key];
-            const escapedKey = key.replaceAll('/', '_');
+            const escapedKey = key.replace(/\//g, '_');
             return !cf
               ? cfList
               : {
