@@ -72,7 +72,7 @@ const Logs = (props: DialogProps) => {
           }}
         >
           <RefreshIcon />
-          Refresh
+          Rafraîchir
         </Button>
       </DialogActions>
     </Dialog>
