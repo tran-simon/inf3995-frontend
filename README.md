@@ -1,8 +1,24 @@
+# INF3995-Frontend
+
+Application React en typescript.
+
+## Requis
+* Node
+* yarn
+
+## Utilisation sans docker
 ```
-docker build -t frontend .
-docker run -p 3000:3000 frontend
+yarn install
+yarn start
 ```
 
+### Pour rouler les tests
+```shell
+yarn test
+```
+
+
+---
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
