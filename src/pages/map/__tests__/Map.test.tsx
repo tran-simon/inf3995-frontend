@@ -1,14 +1,15 @@
 import Map, { calcZoom } from '../Map';
-import { create } from 'react-test-renderer';
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { DEFAULT_ZOOM } from '../../../utils/constants';
 
 describe('Map', () => {
   const delta = 10;
 
-  it('can match snapshot', () => {
-    expect(create(<Map />)).toMatchSnapshot();
+  it('can match snapshot', async () => {
+    await waitFor(() => {
+      expect(render(<Map />).asFragment()).toMatchSnapshot();
+    });
   });
 
   it('can drag map using mouse', () => {

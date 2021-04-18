@@ -1,20 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Map can match snapshot 1`] = `
-Array [
+<DocumentFragment>
   <svg
     height="100%"
     id="map-viewport"
-    onMouseDown={[Function]}
-    onMouseMove={[Function]}
-    onMouseUp={[Function]}
-    onWheel={[Function]}
-    style={
-      Object {
-        "backgroundColor": "grey",
-        "position": "absolute",
-      }
-    }
+    style="background-color: grey; position: absolute;"
     viewBox="0 0 100 100"
     width="100%"
   >
@@ -25,44 +16,33 @@ Array [
         x="0"
         y="0"
       >
-        <feGaussianBlur
+        <fegaussianblur
           in="SourceGraphic"
           stdDeviation="5"
         />
       </filter>
     </defs>
-  </svg>,
+  </svg>
   <div
-    className="MuiGrid-root MuiGrid-container MuiGrid-align-content-xs-space-between"
-    style={
-      Object {
-        "height": "100%",
-        "padding": "1rem",
-      }
-    }
+    class="MuiGrid-root MuiGrid-container MuiGrid-align-content-xs-space-between"
+    style="height: 100%; padding: 1rem;"
   >
     <div
-      className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-item MuiGrid-grid-xs-12"
+      class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-item MuiGrid-grid-xs-11"
     >
       <div
-        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-4"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-4"
       >
         <span
-          className="MuiSlider-root MuiSlider-colorPrimary"
+          class="MuiSlider-root MuiSlider-colorPrimary"
           id="slider-zoom"
-          onMouseDown={[Function]}
         >
           <span
-            className="MuiSlider-rail"
+            class="MuiSlider-rail"
           />
           <span
-            className="MuiSlider-track"
-            style={
-              Object {
-                "left": "0%",
-                "width": "49.74874371859296%",
-              }
-            }
+            class="MuiSlider-track"
+            style="left: 0%; width: 49.74874371859296%;"
           />
           <input
             type="hidden"
@@ -70,56 +50,63 @@ Array [
           />
           <span
             aria-orientation="horizontal"
-            aria-valuemax={200}
-            aria-valuemin={1}
-            aria-valuenow={100}
-            className="MuiSlider-thumb MuiSlider-thumbColorPrimary"
-            data-index={0}
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseOver={[Function]}
+            aria-valuemax="200"
+            aria-valuemin="1"
+            aria-valuenow="100"
+            class="MuiSlider-thumb MuiSlider-thumbColorPrimary"
+            data-index="0"
             role="slider"
-            style={
-              Object {
-                "left": "49.74874371859296%",
-              }
-            }
-            tabIndex={0}
+            style="left: 49.74874371859296%;"
+            tabindex="0"
           />
         </span>
       </div>
     </div>
     <div
-      className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-4"
-      style={
-        Object {
-          "height": "50%",
-        }
-      }
+      class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1"
+    >
+      <button
+        class="MuiButtonBase-root MuiIconButton-root"
+        style="position: absolute; right: 0px;"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiIconButton-label"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root"
+            focusable="false"
+            title="Télécharger l'image SVG"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+    <div
+      class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-4"
+      style="height: 50%;"
     >
       <div
-        className="MuiBox-root MuiBox-root-8 makeStyles-root-6"
+        class="MuiBox-root MuiBox-root-8 makeStyles-root-6"
       >
         <div
-          className="MuiBox-root MuiBox-root-9 makeStyles-leftSection-7"
+          class="MuiBox-root MuiBox-root-9 makeStyles-leftSection-7"
         >
           <span
-            className="MuiSlider-root MuiSlider-colorPrimary MuiSlider-vertical"
-            onMouseDown={[Function]}
+            class="MuiSlider-root MuiSlider-colorPrimary MuiSlider-vertical"
           >
             <span
-              className="MuiSlider-rail"
+              class="MuiSlider-rail"
             />
             <span
-              className="MuiSlider-track"
-              style={
-                Object {
-                  "bottom": "0%",
-                  "height": "50%",
-                }
-              }
+              class="MuiSlider-track"
+              style="bottom: 0%; height: 50%;"
             />
             <input
               type="hidden"
@@ -127,49 +114,27 @@ Array [
             />
             <span
               aria-orientation="vertical"
-              aria-valuemax={100}
-              aria-valuemin={-100}
-              aria-valuenow={0}
-              className="MuiSlider-thumb MuiSlider-thumbColorPrimary"
-              data-index={0}
-              onBlur={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseOver={[Function]}
+              aria-valuemax="100"
+              aria-valuemin="-100"
+              aria-valuenow="0"
+              class="MuiSlider-thumb MuiSlider-thumbColorPrimary"
+              data-index="0"
               role="slider"
-              style={
-                Object {
-                  "bottom": "50%",
-                }
-              }
-              tabIndex={0}
+              style="bottom: 50%;"
+              tabindex="0"
             />
           </span>
           <button
-            className="MuiButtonBase-root MuiIconButton-root"
-            disabled={false}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            tabIndex={0}
+            class="MuiButtonBase-root MuiIconButton-root"
+            tabindex="0"
             type="button"
           >
             <span
-              className="MuiIconButton-label"
+              class="MuiIconButton-label"
             >
               <svg
-                aria-hidden={true}
-                className="MuiSvgIcon-root"
+                aria-hidden="true"
+                class="MuiSvgIcon-root"
                 focusable="false"
                 viewBox="0 0 24 24"
               >
@@ -181,20 +146,14 @@ Array [
           </button>
         </div>
         <span
-          className="MuiSlider-root MuiSlider-colorPrimary"
-          onMouseDown={[Function]}
+          class="MuiSlider-root MuiSlider-colorPrimary"
         >
           <span
-            className="MuiSlider-rail"
+            class="MuiSlider-rail"
           />
           <span
-            className="MuiSlider-track"
-            style={
-              Object {
-                "left": "0%",
-                "width": "50%",
-              }
-            }
+            class="MuiSlider-track"
+            style="left: 0%; width: 50%;"
           />
           <input
             type="hidden"
@@ -202,27 +161,18 @@ Array [
           />
           <span
             aria-orientation="horizontal"
-            aria-valuemax={100}
-            aria-valuemin={-100}
-            aria-valuenow={0}
-            className="MuiSlider-thumb MuiSlider-thumbColorPrimary"
-            data-index={0}
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseOver={[Function]}
+            aria-valuemax="100"
+            aria-valuemin="-100"
+            aria-valuenow="0"
+            class="MuiSlider-thumb MuiSlider-thumbColorPrimary"
+            data-index="0"
             role="slider"
-            style={
-              Object {
-                "left": "50%",
-              }
-            }
-            tabIndex={0}
+            style="left: 50%;"
+            tabindex="0"
           />
         </span>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
