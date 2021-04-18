@@ -17,10 +17,8 @@ const Main = () => {
       firebase
         .database()
         .ref(`/maps/${mapId}`)
-        .get()
-        .then((snapshot) => {
-          const value = snapshot.val();
-
+        .on('value', (data) => {
+          const value = data.val();
           if (value) {
             setMapDataDto(value);
           }
